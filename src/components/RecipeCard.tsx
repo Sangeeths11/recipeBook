@@ -10,25 +10,41 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link href={`/recipes/${recipe._id}`}>
       <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
-        {recipe.imageUrl ? (
-          <div className="relative h-48 w-full">
-            <Image
-              src={recipe.imageUrl}
-              alt={recipe.title}
-              fill
-              className="object-cover"
-            />
+        <div className="relative">
+          {recipe.imageUrl ? (
+            <div className="relative h-48 w-full">
+              <Image
+                src={recipe.imageUrl}
+                alt={recipe.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="h-48 bg-primary-50 flex items-center justify-center">
+              <span className="text-primary-400">No image available</span>
+            </div>
+          )}
+          
+          {/* Categories positioned as overlapping tags */}
+          <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5">
+            {recipe.categories.map((category) => (
+              <span
+                key={typeof category === 'string' ? category : category._id}
+                className="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-primary-600 text-xs font-medium rounded-full shadow-sm border border-primary-100"
+              >
+                {typeof category === 'string' ? category : category.name}
+              </span>
+            ))}
           </div>
-        ) : (
-          <div className="h-48 bg-primary-50 flex items-center justify-center">
-            <span className="text-primary-400">No image available</span>
-          </div>
-        )}
+        </div>
+
         <div className="p-6">
           <h3 className="font-semibold text-xl text-primary-700 mb-3">{recipe.title}</h3>
           <p className="text-gray-600 mb-4 line-clamp-2">
             {recipe.description}
           </p>
+
           <div className="flex justify-between items-center">
             <span className={`px-3 py-1 rounded-full text-sm font-medium
               ${recipe.difficulty === 'easy' ? 'bg-green-100 text-green-700' : 
