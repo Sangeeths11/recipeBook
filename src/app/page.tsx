@@ -1,14 +1,50 @@
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, useState, useEffect } from 'react';
 import RecipeCard from '@/components/RecipeCard';
 import SearchBar from '@/components/SearchBar';
 import FilterBar from '@/components/FilterBar';
 import Loading from '@/components/Loading';
-import { getRecipes } from '@/lib/recipes';
 import { Recipe } from '@/types/recipe';
 import Link from 'next/link';
 
-export default async function Home() {
-  const recipes = await getRecipes();
+export default function Home() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch('/api/recipes');
+        const data = await response.json();
+        if (data.success) {
+          setRecipes(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching recipes:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
+
+  const handleDeleteRecipe = async (id: string) => {
+    try {
+      const response = await fetch(`/api/recipes/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete recipe');
+
+      // Remove the recipe from the state after successful deletion
+      setRecipes(prev => prev.filter(recipe => recipe._id !== id));
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+      // You might want to add error handling UI here
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
@@ -70,7 +106,11 @@ export default async function Home() {
               </div>
             ) : (
               recipes.map((recipe: Recipe) => (
-                <RecipeCard key={recipe._id} recipe={recipe} />
+                <RecipeCard 
+                  key={recipe._id} 
+                  recipe={recipe} 
+                  onDelete={handleDeleteRecipe}
+                />
               ))
             )}
           </div>
