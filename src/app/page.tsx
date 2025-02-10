@@ -21,7 +21,13 @@ export default function Home() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch('/api/recipes');
+        // Build query parameters
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('search', searchTerm);
+        if (filters.difficulty) params.append('difficulty', filters.difficulty);
+        if (filters.category) params.append('category', filters.category);
+
+        const response = await fetch(`/api/recipes?${params.toString()}`);
         const data = await response.json();
         if (data.success) {
           setRecipes(data.data);
@@ -34,36 +40,10 @@ export default function Home() {
       }
     };
 
-    fetchRecipes();
-  }, []);
-
-  useEffect(() => {
-    let result = [...recipes];
-
-    // Apply search filter
-    if (searchTerm) {
-      result = result.filter(recipe =>
-        recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Apply difficulty filter
-    if (filters.difficulty) {
-      result = result.filter(recipe => recipe.difficulty === filters.difficulty);
-    }
-
-    // Apply category filter
-    if (filters.category) {
-      result = result.filter(recipe =>
-        recipe.categories.some(category => 
-          (typeof category === 'string' ? category : category.name) === filters.category
-        )
-      );
-    }
-
-    setFilteredRecipes(result);
-  }, [searchTerm, filters, recipes]);
+    // Debounce the fetch to avoid too many requests
+    const timeoutId = setTimeout(fetchRecipes, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, filters]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
