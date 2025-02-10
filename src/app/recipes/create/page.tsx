@@ -87,156 +87,153 @@ export default function CreateRecipe() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white py-12">
-      <div className="max-w-3xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-primary-700 mb-8">Create New Recipe</h1>
+    <div className="h-screen bg-gradient-to-b from-primary-50 to-white p-4">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-2xl font-bold text-primary-700 mb-4">Create New Recipe</h1>
         
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
-            <input
-              type="text"
-              required
-              className="w-full p-2 border rounded-md"
-              value={formData.title}
-              onChange={e => setFormData({...formData, title: e.target.value})}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-            <textarea
-              required
-              className="w-full p-2 border rounded-md"
-              rows={3}
-              value={formData.description}
-              onChange={e => setFormData({...formData, description: e.target.value})}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow">
+          {/* Left Column */}
+          <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Preparation Time (minutes)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
               <input
-                type="number"
+                type="text"
                 required
-                min="1"
-                className="w-full p-2 border rounded-md"
-                value={formData.preparationTime}
-                onChange={e => setFormData({...formData, preparationTime: e.target.value})}
+                className="w-full p-2 border rounded-md text-black"
+                value={formData.title}
+                onChange={e => setFormData({...formData, title: e.target.value})}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
-              <select
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
                 required
-                className="w-full p-2 border rounded-md"
-                value={formData.difficulty}
-                onChange={e => setFormData({...formData, difficulty: e.target.value})}
-              >
-                <option value="">Select difficulty</option>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
+                className="w-full p-2 border rounded-md text-black"
+                rows={2}
+                value={formData.description}
+                onChange={e => setFormData({...formData, description: e.target.value})}
+              />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
-            <textarea
-              required
-              className="w-full p-2 border rounded-md"
-              rows={6}
-              value={formData.instructions}
-              onChange={e => setFormData({...formData, instructions: e.target.value})}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Image URL (optional)</label>
-            <input
-              type="url"
-              className="w-full p-2 border rounded-md"
-              value={formData.imageUrl}
-              onChange={e => setFormData({...formData, imageUrl: e.target.value})}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Ingredients</label>
-            {formData.ingredients.map((ingredient, index) => (
-              <div key={index} className="flex gap-4 mb-4">
-                <select
-                  required
-                  className="flex-1 p-2 border rounded-md"
-                  value={ingredient.ingredient}
-                  onChange={(e) => updateIngredient(index, 'ingredient', e.target.value)}
-                >
-                  <option value="">Select ingredient</option>
-                  {ingredients.map((ing) => (
-                    <option key={ing._id} value={ing._id}>
-                      {ing.name}
-                    </option>
-                  ))}
-                </select>
-
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Prep Time (min)</label>
                 <input
                   type="number"
                   required
-                  min="0"
-                  step="0.1"
-                  className="w-24 p-2 border rounded-md"
-                  value={ingredient.amount}
-                  onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value))}
-                  placeholder="Amount"
+                  min="1"
+                  className="w-full p-2 border rounded-md text-black"
+                  value={formData.preparationTime}
+                  onChange={e => setFormData({...formData, preparationTime: e.target.value})}
                 />
-
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
                 <select
                   required
-                  className="w-24 p-2 border rounded-md"
-                  value={ingredient.unit}
-                  onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
+                  className="w-full p-2 border rounded-md text-black"
+                  value={formData.difficulty}
+                  onChange={e => setFormData({...formData, difficulty: e.target.value})}
                 >
-                  <option value="g">g</option>
-                  <option value="kg">kg</option>
-                  <option value="ml">ml</option>
-                  <option value="l">l</option>
-                  <option value="piece">piece</option>
-                  <option value="tbsp">tbsp</option>
-                  <option value="tsp">tsp</option>
-                  <option value="cup">cup</option>
+                  <option value="">Select</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
                 </select>
-
-                <button
-                  type="button"
-                  onClick={() => removeIngredient(index)}
-                  className="p-2 text-red-600 hover:text-red-800"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
               </div>
-            ))}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Instructions</label>
+              <textarea
+                required
+                className="w-full p-2 border rounded-md text-black"
+                rows={4}
+                value={formData.instructions}
+                onChange={e => setFormData({...formData, instructions: e.target.value})}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+              <input
+                type="url"
+                className="w-full p-2 border rounded-md text-black"
+                value={formData.imageUrl}
+                onChange={e => setFormData({...formData, imageUrl: e.target.value})}
+              />
+            </div>
+          </div>
+
+          {/* Right Column - Ingredients */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Ingredients</label>
+            <div className="space-y-2 max-h-[calc(100vh-250px)] overflow-y-auto pr-2">
+              {formData.ingredients.map((ingredient, index) => (
+                <div key={index} className="flex gap-2">
+                  <select
+                    required
+                    className="flex-1 p-2 border rounded-md text-black text-sm"
+                    value={ingredient.ingredient}
+                    onChange={(e) => updateIngredient(index, 'ingredient', e.target.value)}
+                  >
+                    <option value="">Select ingredient</option>
+                    {ingredients.map((ing) => (
+                      <option key={ing._id} value={ing._id}>{ing.name}</option>
+                    ))}
+                  </select>
+
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    step="0.1"
+                    className="w-16 p-2 border rounded-md text-black text-sm"
+                    value={ingredient.amount}
+                    onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value))}
+                  />
+
+                  <select
+                    required
+                    className="w-20 p-2 border rounded-md text-black text-sm"
+                    value={ingredient.unit}
+                    onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
+                  >
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="ml">ml</option>
+                    <option value="l">l</option>
+                    <option value="piece">pc</option>
+                    <option value="tbsp">tbsp</option>
+                    <option value="tsp">tsp</option>
+                    <option value="cup">cup</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={() => removeIngredient(index)}
+                    className="p-1 text-red-600 hover:text-red-800"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
 
             <button
               type="button"
               onClick={addIngredient}
-              className="mt-2 text-primary-600 hover:text-primary-800 flex items-center gap-2"
+              className="mt-2 text-primary-600 hover:text-primary-800 text-sm flex items-center gap-1"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Ingredient
+              + Add Ingredient
             </button>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 disabled:opacity-50"
+            className="col-span-2 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 disabled:opacity-50"
           >
             {loading ? 'Creating...' : 'Create Recipe'}
           </button>
