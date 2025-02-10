@@ -1,10 +1,22 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Recipe from '@/models/Recipe';
+import Category from '@/models/Category';
+import Ingredient from '@/models/Ingredient';
+import mongoose from 'mongoose';
 
 export async function GET() {
   try {
     await connectDB();
+
+    // Ensure models are registered
+    if (!mongoose.models.Category) {
+      mongoose.model('Category', Category.schema);
+    }
+    if (!mongoose.models.Ingredient) {
+      mongoose.model('Ingredient', Ingredient.schema);
+    }
+    
     const recipes = await Recipe.find({})
       .populate('categories')
       .populate('ingredients.ingredient')
