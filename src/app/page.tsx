@@ -10,7 +10,13 @@ import Link from 'next/link';
 
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
+    difficulty: undefined as 'easy' | 'medium' | 'hard' | undefined,
+    category: ''
+  });
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -19,6 +25,7 @@ export default function Home() {
         const data = await response.json();
         if (data.success) {
           setRecipes(data.data);
+          setFilteredRecipes(data.data);
         }
       } catch (error) {
         console.error('Error fetching recipes:', error);
@@ -30,6 +37,42 @@ export default function Home() {
     fetchRecipes();
   }, []);
 
+  useEffect(() => {
+    let result = [...recipes];
+
+    // Apply search filter
+    if (searchTerm) {
+      result = result.filter(recipe =>
+        recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Apply difficulty filter
+    if (filters.difficulty) {
+      result = result.filter(recipe => recipe.difficulty === filters.difficulty);
+    }
+
+    // Apply category filter
+    if (filters.category) {
+      result = result.filter(recipe =>
+        recipe.categories.some(category => 
+          (typeof category === 'string' ? category : category.name) === filters.category
+        )
+      );
+    }
+
+    setFilteredRecipes(result);
+  }, [searchTerm, filters, recipes]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
+  const handleFilterChange = (newFilters: Partial<typeof filters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  };
+
   const handleDeleteRecipe = async (id: string) => {
     try {
       const response = await fetch(`/api/recipes/${id}`, {
@@ -38,11 +81,9 @@ export default function Home() {
 
       if (!response.ok) throw new Error('Failed to delete recipe');
 
-      // Remove the recipe from the state after successful deletion
       setRecipes(prev => prev.filter(recipe => recipe._id !== id));
     } catch (error) {
       console.error('Error deleting recipe:', error);
-      // You might want to add error handling UI here
     }
   };
 
@@ -75,37 +116,28 @@ export default function Home() {
         <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="w-full sm:w-4/5">
-              <SearchBar />
+              <SearchBar onSearch={handleSearch} />
             </div>
             <div className="w-full sm:w-1/5">
-              <FilterBar />
+              <FilterBar onFilterChange={handleFilterChange} />
             </div>
           </div>
         </div>
 
         <Suspense fallback={<Loading />}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {recipes.length === 0 ? (
+            {filteredRecipes.length === 0 ? (
               <div className="col-span-full text-center py-12">
                 <div className="mb-4">
                   <svg className="w-16 h-16 mx-auto text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">No recipes yet</h3>
-                <p className="text-gray-500 mb-6">Be the first to add a delicious recipe!</p>
-                <Link 
-                  href="/recipes/create"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Add Recipe
-                </Link>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">No recipes found</h3>
+                <p className="text-gray-500 mb-6">Try adjusting your search or filters</p>
               </div>
             ) : (
-              recipes.map((recipe: Recipe) => (
+              filteredRecipes.map((recipe: Recipe) => (
                 <RecipeCard 
                   key={recipe._id} 
                   recipe={recipe} 

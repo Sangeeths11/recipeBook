@@ -1,6 +1,8 @@
 'use client';
 
-export default function SearchBar() {
+import { SearchBarProps } from '@/types/recipe';
+
+export default function SearchBar({ onSearch }: SearchBarProps) {
   return (
     <div className="w-full">
       <div className="relative">
@@ -13,9 +15,7 @@ export default function SearchBar() {
           type="search"
           placeholder="Search recipes..."
           className="w-full pl-12 pr-4 py-4 border-2 border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-400 focus:border-primary-400 bg-white text-gray-900 placeholder-gray-500"
-          onChange={(e) => {
-            // Implement search logic
-          }}
+          onChange={(e) => onSearch?.(e.target.value)}
         />
       </div>
     </div>
