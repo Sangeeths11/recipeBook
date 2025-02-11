@@ -37,12 +37,15 @@ export interface Comment extends BaseDocument {
 export interface Recipe extends BaseDocument {
   title: string;
   description: string;
-  imageUrl?: string;
   preparationTime: number;
   difficulty: 'easy' | 'medium' | 'hard';
-  categories: (Category | string)[];
+  categories: string[] | Category[];
   ingredients: RecipeIngredient[];
   instructions: string;
+  image?: {
+    data: Buffer | string;
+    contentType: string;
+  };
 }
 
 // Props types for components

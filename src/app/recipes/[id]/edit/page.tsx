@@ -22,10 +22,12 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
     preparationTime: '',
     difficulty: '',
     instructions: '',
-    imageUrl: '',
     categories: [] as string[],
-    ingredients: [{ ingredient: '', amount: 0, unit: 'g' }] as RecipeIngredient[]
+    ingredients: [{ ingredient: '', amount: 0, unit: 'g' }] as RecipeIngredient[],
+    image: null as File | null,
+    imageUrl: ''
   });
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
 
   useEffect(() => {
     const fetchRecipeAndIngredients = async () => {
@@ -36,13 +38,13 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
         
         if (recipeData.success) {
           const recipe = recipeData.data;
+          setRecipe(recipe);
           setFormData({
             title: recipe.title,
             description: recipe.description,
             preparationTime: recipe.preparationTime.toString(),
             difficulty: recipe.difficulty,
             instructions: recipe.instructions,
-            imageUrl: recipe.imageUrl || '',
             categories: recipe.categories.map((cat: any) => 
               typeof cat === 'string' ? cat : cat._id
             ),
@@ -51,7 +53,9 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
                 ing.ingredient : ing.ingredient._id,
               amount: ing.amount,
               unit: ing.unit
-            }))
+            })),
+            image: null,
+            imageUrl: ''
           });
         }
 
@@ -95,15 +99,38 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
     setLoading(true);
 
     try {
+      // First update the recipe
       const response = await fetch(`/api/recipes/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          preparationTime: formData.preparationTime,
+          difficulty: formData.difficulty,
+          instructions: formData.instructions,
+          categories: formData.categories,
+          ingredients: formData.ingredients,
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to update recipe');
+
+      // If there's a new image, upload it
+      if (formData.image) {
+        const imageFormData = new FormData();
+        imageFormData.append('image', formData.image);
+        imageFormData.append('recipeId', id);
+
+        const imageResponse = await fetch('/api/recipes/upload', {
+          method: 'POST',
+          body: imageFormData,
+        });
+
+        if (!imageResponse.ok) throw new Error('Failed to upload image');
+      }
 
       router.push('/');
       router.refresh();
@@ -185,13 +212,52 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-              <input
-                type="url"
-                className="w-full p-2 border rounded-md text-black"
-                value={formData.imageUrl}
-                onChange={e => setFormData({...formData, imageUrl: e.target.value})}
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Recipe Image</label>
+              <div className="mt-1 flex items-center">
+                {formData.image ? (
+                  <div className="relative w-24 h-24 mr-4">
+                    <img
+                      src={URL.createObjectURL(formData.image)}
+                      alt="Preview"
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, image: null })}
+                      className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : recipe?.image ? (
+                  <div className="relative w-24 h-24 mr-4">
+                    <img
+                      src={`data:${recipe.image.contentType};base64,${typeof recipe.image.data === 'string' 
+                        ? recipe.image.data 
+                        : Buffer.from(recipe.image.data).toString('base64')}`}
+                      alt="Current"
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                  </div>
+                ) : null}
+                <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Choose New Image
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setFormData({ ...formData, image: file });
+                      }
+                    }}
+                  />
+                </label>
+              </div>
             </div>
           </div>
 

@@ -77,10 +77,12 @@ export default function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
 
       <Link href={`/recipes/${recipe._id}`} className="block">
         <div className="relative">
-          {recipe.imageUrl ? (
+          {recipe.image ? (
             <div className="relative h-48 w-full">
               <Image
-                src={recipe.imageUrl}
+                src={`data:${recipe.image.contentType};base64,${typeof recipe.image.data === 'string' 
+                  ? recipe.image.data 
+                  : Buffer.from(recipe.image.data).toString('base64')}`}
                 alt={recipe.title}
                 fill
                 className="object-cover"

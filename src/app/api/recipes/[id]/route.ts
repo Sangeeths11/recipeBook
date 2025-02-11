@@ -21,8 +21,8 @@ export async function DELETE(
     
     if (!recipe) {
       return NextResponse.json(
-        { success: false, error: 'Recipe not found' },
-        { status: 404 }
+        { success: false, message: 'Recipe already deleted or not found' },
+        { status: 200 }
       );
     }
     

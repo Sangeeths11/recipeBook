@@ -36,8 +36,9 @@ const RecipeSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide cooking instructions']
   },
-  imageUrl: {
-    type: String
+  image: {
+    data: Buffer,
+    contentType: String
   },
   preparationTime: {
     type: Number,
