@@ -3,6 +3,9 @@ import connectDB from '@/lib/mongodb';
 import Ingredient from '@/models/Ingredient';
 import Recipe from '@/models/Recipe';
 
+// Get the valid units from the Mongoose schema
+const validUnits = (Ingredient.schema.path('defaultUnit') as any).enumValues;
+
 export async function GET(
   request: Request,
   context: { params: { id: string } }
@@ -24,7 +27,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching ingredient:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch ingredient' },
+      { success: false, error: 'Failed to fetch ingredient' + error },
       { status: 500 }
     );
   }
@@ -44,6 +47,14 @@ export async function PUT(
     if (!data.name || !data.defaultUnit) {
       return NextResponse.json(
         { success: false, error: 'Name and default unit are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate defaultUnit enum values
+    if (!validUnits.includes(data.defaultUnit)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid default unit. Must be one of: ' + validUnits.join(', ') },
         { status: 400 }
       );
     }
@@ -115,7 +126,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting ingredient:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to delete ingredient' },
+      { success: false, error: 'Failed to delete ingredient' + error },
       { status: 500 }
     );
   }

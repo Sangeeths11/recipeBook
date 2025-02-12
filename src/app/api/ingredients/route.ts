@@ -10,7 +10,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching ingredients:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch ingredients' },
+      { success: false, error: 'Failed to fetch ingredients' + error },
       { status: 500 }
     );
   }
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: 'Failed to create ingredient' },
+      { success: false, error: 'Failed to create ingredient ' + error },
       { status: 500 }
     );
   }

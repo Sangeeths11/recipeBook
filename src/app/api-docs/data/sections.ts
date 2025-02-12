@@ -73,7 +73,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "PUT",
           path: "/recipes/:id",
-          description: "Update a recipe",
+          description: "Update a recipe. For image updates, use the /recipes/upload endpoint separately.",
           requestBody: {
             title: "string",
             description: "string",
@@ -103,10 +103,23 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "POST",
           path: "/recipes/upload",
           description: "Upload an image for a recipe",
-          requestBody: "multipart/form-data with 'image' file and 'recipeId'",
+          requestBody: {
+            type: "multipart/form-data",
+            fields: {
+              image: "File (image/*)",
+              recipeId: "string"
+            }
+          },
           response: {
             success: true,
-            data: "Updated Recipe Object with image"
+            data: {
+              _id: "string",
+              image: {
+                data: "Buffer",
+                contentType: "string"
+              }
+              // ... other recipe fields
+            }
           }
         }
       ]
@@ -225,8 +238,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
             success: true,
             data: [{
               _id: "string",
-              name: "string",
-              defaultUnit: "string"
+              name: "string (required, max 50 chars, unique)",
+              defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup (required)",
+              description: "string (optional, max 200 chars)"
             }]
           }
         },
@@ -236,7 +250,8 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           description: "Create a new ingredient",
           requestBody: {
             name: "string",
-            defaultUnit: "string"
+            defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup",
+            description: "string (optional)"
           },
           response: {
             success: true,
@@ -250,7 +265,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           requestBody: {
             name: "string",
             defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup",
-            description: "string"
+            description: "string (optional)"
           },
           response: {
             success: true,
