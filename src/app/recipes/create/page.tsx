@@ -120,6 +120,13 @@ export default function CreateRecipe() {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData({ ...formData, image: file });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-5xl mx-auto px-4 py-8">
@@ -230,7 +237,7 @@ export default function CreateRecipe() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Recipe Image</label>
                 <div className="mt-1 flex items-center">
-                  {formData.image ? (
+                  {formData.image && (
                     <div className="relative w-24 h-24 mr-4">
                       <img
                         src={URL.createObjectURL(formData.image)}
@@ -239,28 +246,27 @@ export default function CreateRecipe() {
                       />
                       <button
                         type="button"
-                        onClick={() => setFormData({ ...formData, image: null })}
+                        onClick={() => {
+                          setFormData({ ...formData, image: null });
+                          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                          if (fileInput) fileInput.value = '';
+                        }}
                         className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
                       >
                         ✕
                       </button>
                     </div>
-                  ) : null}
+                  )}
                   <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                     <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Choose Image
+                    {formData.image ? formData.image.name : 'Choose Image'}
                     <input
                       type="file"
-                      className="hidden"
                       accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          setFormData({ ...formData, image: file });
-                        }
-                      }}
+                      onChange={handleImageChange}
+                      className="hidden"
                     />
                   </label>
                 </div>
