@@ -5,7 +5,7 @@ import RecipeCard from '@/components/RecipeCard';
 import SearchBar from '@/components/SearchBar';
 import FilterBar from '@/components/FilterBar';
 import Loading from '@/components/Loading';
-import { Recipe } from '@/types/recipe';
+import { Recipe, Category } from '@/types/recipe';
 import Link from 'next/link';
 
 export default function Home() {
@@ -13,10 +13,28 @@ export default function Home() {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [categories, setCategories] = useState<Category[]>([]);
   const [filters, setFilters] = useState({
     difficulty: undefined as 'easy' | 'medium' | 'hard' | undefined,
     category: ''
   });
+
+  useEffect(() => {
+    // Fetch categories
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        const data = await response.json();
+        if (data.success) {
+          setCategories(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -126,7 +144,7 @@ export default function Home() {
               <SearchBar onSearch={handleSearch} />
             </div>
             <div className="w-full sm:w-1/5">
-              <FilterBar onFilterChange={handleFilterChange} />
+              <FilterBar onFilterChange={handleFilterChange} categories={categories} />
             </div>
           </div>
         </div>

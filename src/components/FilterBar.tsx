@@ -1,8 +1,8 @@
 'use client';
 
-import { FilterBarProps } from '@/types/recipe';
+import { FilterBarProps, Category } from '@/types/recipe';
 
-export default function FilterBar({ onFilterChange }: FilterBarProps) {
+export default function FilterBar({ onFilterChange, categories }: FilterBarProps & { categories: Category[] }) {
   return (
     <div className="flex flex-row gap-2 w-full">
       <select 
@@ -20,10 +20,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
         onChange={(e) => onFilterChange?.({ category: e.target.value })}
       >
         <option value="">Category</option>
-        <option value="Breakfast">Breakfast</option>
-        <option value="Main Course">Main Course</option>
-        <option value="Dessert">Dessert</option>
-        <option value="Vegetarian">Vegetarian</option>
+        {categories.map((category) => (
+          <option key={category._id} value={category.name}>
+            {category.name}
+          </option>
+        ))}
       </select>
     </div>
   );
