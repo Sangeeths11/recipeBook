@@ -1,14 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { endpoints } from '../data/endpoints';
 
 
-export default function QuickActions({ onEndpointSelect }: {
+export default function QuickActions({ 
+  selectedEndpoint,
+  onEndpointSelect 
+}: {
+  selectedEndpoint: { path: string; method: string; body?: string; } | null;
   onEndpointSelect: (endpoint: string, method: string, body?: string) => void;
 }) {
-  const [selectedEndpoint, setSelectedEndpoint] = useState<string | null>(null);
   const [activeMethod, setActiveMethod] = useState<string>('ALL');
+
+  // Wenn ein neuer Endpoint ausgewählt wird, setze die aktive Methode
+  useEffect(() => {
+    if (selectedEndpoint) {
+      setActiveMethod(selectedEndpoint.method);
+    }
+  }, [selectedEndpoint]);
 
   // Gruppiere Endpoints nach Methode
   const groupedEndpoints = endpoints.reduce((acc, endpoint) => {
@@ -20,7 +30,6 @@ export default function QuickActions({ onEndpointSelect }: {
   }, {} as Record<string, typeof endpoints>);
 
   const handleEndpointClick = (endpoint: string, method: string, exampleBody?: string) => {
-    setSelectedEndpoint(`${method} ${endpoint}`);
     onEndpointSelect(endpoint, method, exampleBody);
   };
 
@@ -61,7 +70,8 @@ export default function QuickActions({ onEndpointSelect }: {
                 key={`${endpoint.method}-${endpoint.path}-${index}`}
                 onClick={() => handleEndpointClick(endpoint.path, endpoint.method, endpoint.exampleBody)}
                 className={`p-4 rounded-lg border transition-all ${
-                  selectedEndpoint === `${endpoint.method} ${endpoint.path}`
+                  selectedEndpoint?.path === endpoint.path && 
+                  selectedEndpoint?.method === endpoint.method
                     ? 'bg-blue-50 border-blue-500 shadow-md text-gray-900'
                     : 'hover:bg-gray-50 border-gray-200 hover:shadow-md text-gray-700'
                 }`}

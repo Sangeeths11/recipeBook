@@ -16,6 +16,11 @@ export default function ApiDocs() {
 
   const handleEndpointSelect = (path: string, method: string, body?: string) => {
     setSelectedEndpoint({ path, method, body });
+    // Scroll to ApiTester component
+    const apiTester = document.getElementById('api-tester');
+    if (apiTester) {
+      apiTester.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const toggleSection = (title: string) => {
@@ -36,7 +41,10 @@ export default function ApiDocs() {
           onEndpointSelect={setSelectedEndpoint}
         />
         
-        <QuickActions onEndpointSelect={handleEndpointSelect} />
+        <QuickActions 
+          selectedEndpoint={selectedEndpoint} 
+          onEndpointSelect={handleEndpointSelect} 
+        />
 
         {/* API Documentation */}
         <div className="bg-white rounded-lg shadow-lg p-6 mt-8">
