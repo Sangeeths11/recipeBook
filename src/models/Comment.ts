@@ -13,7 +13,8 @@ const CommentSchema = new mongoose.Schema({
   },
   authorName: {
     type: String,
-    default: 'Anonymous'
+    required: [true, 'Please provide your name'],
+    maxlength: [50, 'Name cannot be more than 50 characters']
   },
   rating: {
     type: Number,
