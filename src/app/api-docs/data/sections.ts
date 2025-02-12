@@ -276,6 +276,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "DELETE",
           path: "/ingredients/:id",
           description: "Delete an ingredient (fails if used in recipes)",
+          params: [
+            { name: "id", description: "Ingredient ID" }
+          ],
           response: {
             success: true
           }

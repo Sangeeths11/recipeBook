@@ -76,7 +76,7 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
           />
         </div>
 
-        {method !== 'GET' && (
+        {(method === 'POST' || method === 'PUT') && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Request Body (JSON)
