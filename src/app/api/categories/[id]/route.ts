@@ -7,7 +7,7 @@ export async function GET(
   request: Request,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   try {
     await connectDB();
@@ -34,7 +34,7 @@ export async function PUT(
   request: Request,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   try {
     await connectDB();
@@ -88,7 +88,7 @@ export async function DELETE(
   request: Request,
   context: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   try {
     await connectDB();
