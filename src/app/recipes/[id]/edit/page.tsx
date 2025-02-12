@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Recipe, Ingredient } from '@/types/recipe';
+import { Recipe, Ingredient, Category } from '@/types/recipe';
 import { use } from 'react';
 
 type RecipeIngredient = {
@@ -16,6 +16,7 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -64,6 +65,13 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
         const ingredientsData = await ingredientsResponse.json();
         if (ingredientsData.success) {
           setIngredients(ingredientsData.data);
+        }
+
+        // Fetch categories
+        const categoriesResponse = await fetch('/api/categories');
+        const categoriesData = await categoriesResponse.json();
+        if (categoriesData.success) {
+          setCategories(categoriesData.data);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -197,6 +205,35 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
                 </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+              <div className="grid grid-cols-2 gap-2">
+                {categories.map((category) => (
+                  <label key={category._id} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.categories.includes(category._id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFormData({
+                            ...formData,
+                            categories: [...formData.categories, category._id]
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            categories: formData.categories.filter(id => id !== category._id)
+                          });
+                        }
+                      }}
+                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-gray-700">{category.name}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
