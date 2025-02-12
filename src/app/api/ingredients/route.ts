@@ -14,4 +14,23 @@ export async function GET() {
       { status: 500 }
     );
   }
+}
+
+export async function POST(request: Request) {
+  try {
+    await connectDB();
+    const data = await request.json();
+    
+    const ingredient = await Ingredient.create(data);
+    
+    return NextResponse.json({ 
+      success: true, 
+      data: ingredient 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Failed to create ingredient' },
+      { status: 500 }
+    );
+  }
 } 

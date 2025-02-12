@@ -53,10 +53,24 @@ export default function CreateRecipe() {
 
   const updateIngredient = (index: number, field: keyof RecipeIngredient, value: string | number) => {
     const newIngredients = [...formData.ingredients];
-    newIngredients[index] = {
-      ...newIngredients[index],
-      [field]: value
-    };
+    
+    if (field === 'ingredient') {
+      // When ingredient is selected, set its default unit
+      const selectedIngredient = ingredients.find(ing => ing._id === value);
+      if (selectedIngredient) {
+        newIngredients[index] = {
+          ingredient: value as string,
+          amount: newIngredients[index].amount,
+          unit: selectedIngredient.defaultUnit
+        };
+      }
+    } else {
+      newIngredients[index] = {
+        ...newIngredients[index],
+        [field]: value
+      };
+    }
+    
     setFormData({ ...formData, ingredients: newIngredients });
   };
 
