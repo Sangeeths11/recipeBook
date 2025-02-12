@@ -96,6 +96,18 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-primary-700">Recipe Details</h1>
+          <Link
+            href="/"
+            className="group relative inline-flex items-center justify-center px-6 py-2 bg-primary-100 text-primary-700 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <span className="absolute inset-0 bg-primary-200 opacity-0 group-hover:opacity-20 transition-opacity" />
+            <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-50 to-primary-200 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
+            <span className="relative">Back to Home</span>
+          </Link>
+        </div>
+
         {/* Recipe Header with Glass Effect */}
         <div className="relative mb-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
           <div className="flex justify-between items-start mb-4">
