@@ -2,12 +2,24 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Category from '@/models/Category';
 import Recipe from '@/models/Recipe';
+import mongoose from 'mongoose';
 
 export async function GET(
   request: Request,
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
+
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Invalid ID format. Must be a 24-character hexadecimal string.' 
+      },
+      { status: 400 }
+    );
+  }
 
   try {
     await connectDB();
@@ -36,9 +48,30 @@ export async function PUT(
 ) {
   const { id } = await context.params;
 
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Invalid ID format. Must be a 24-character hexadecimal string.' 
+      },
+      { status: 400 }
+    );
+  }
+
   try {
     await connectDB();
-    const data = await request.json();
+    
+    // Validate JSON format
+    let data;
+    try {
+      data = await request.json();
+    } catch (e) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid JSON format in request body' },
+        { status: 400 }
+      );
+    }
 
     // Validate required fields
     if (!data.name || !data.description) {
@@ -90,6 +123,17 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Invalid ID format. Must be a 24-character hexadecimal string.' 
+      },
+      { status: 400 }
+    );
+  }
+
   try {
     await connectDB();
     
@@ -110,7 +154,7 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting category:', error);

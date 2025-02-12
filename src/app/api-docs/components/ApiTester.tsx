@@ -24,6 +24,8 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
       setEndpoint(selectedEndpoint.path);
       setMethod(selectedEndpoint.method);
       setRequestBody(selectedEndpoint.body || '');
+      // Reset response when endpoint changes
+      setResponse('');
       
       // Scroll to ApiTester component
       const apiTester = document.getElementById('api-tester');
@@ -32,6 +34,22 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
       }
     }
   }, [selectedEndpoint]);
+
+  // Reset response when manually changing endpoint or method
+  const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEndpoint(e.target.value);
+    setResponse('');
+  };
+
+  const handleMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMethod(e.target.value);
+    setResponse('');
+  };
+
+  const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRequestBody(e.target.value);
+    setResponse('');
+  };
 
   const handleTest = async () => {
     setLoading(true);
@@ -64,7 +82,7 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
         <div className="flex gap-4">
           <select
             value={method}
-            onChange={(e) => setMethod(e.target.value)}
+            onChange={handleMethodChange}
             className="px-3 py-2 border rounded-md text-gray-900 w-24"
           >
             <option value="GET">GET</option>
@@ -76,7 +94,7 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
           <input
             type="text"
             value={endpoint}
-            onChange={(e) => setEndpoint(e.target.value)}
+            onChange={handleEndpointChange}
             placeholder="/endpoint"
             className="flex-1 px-3 py-2 border rounded-md text-gray-900"
           />
@@ -89,7 +107,7 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
             </label>
             <textarea
               value={requestBody}
-              onChange={(e) => setRequestBody(e.target.value)}
+              onChange={handleBodyChange}
               rows={5}
               className="w-full px-3 py-2 border rounded-md text-gray-900 font-mono text-sm"
               placeholder="{}"

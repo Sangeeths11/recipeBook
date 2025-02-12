@@ -27,7 +27,16 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     
-    const data = await request.json();
+    // Validate JSON format
+    let data;
+    try {
+      data = await request.json();
+    } catch (e) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid JSON format in request body' },
+        { status: 400 }
+      );
+    }
     
     // Validate required fields
     if (!data.name || !data.description) {
