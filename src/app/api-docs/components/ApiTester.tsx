@@ -24,6 +24,12 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
       setEndpoint(selectedEndpoint.path);
       setMethod(selectedEndpoint.method);
       setRequestBody(selectedEndpoint.body || '');
+      
+      // Scroll to ApiTester component
+      const apiTester = document.getElementById('api-tester');
+      if (apiTester) {
+        apiTester.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }, [selectedEndpoint]);
 
@@ -51,7 +57,7 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+    <div id="api-tester" className="bg-white p-6 rounded-lg shadow-lg mb-8">
       <h2 className="text-xl font-semibold mb-4 text-gray-900">Test API Endpoints</h2>
       
       <div className="space-y-4">
