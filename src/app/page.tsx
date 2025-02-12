@@ -89,19 +89,35 @@ export default function Home() {
             Find your next culinary inspiration from our collection of handpicked recipes
           </p>
           
-          <Link 
-            href="/recipes/create" 
-            className="group relative inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
-            <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-400 to-primary-600 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
-            <span className="relative flex items-center gap-2">
-              <svg className="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <span className="font-medium">Create Your Recipe</span>
-            </span>
-          </Link>
+          <div className="flex justify-center gap-4">
+            <Link 
+              href="/recipes/create" 
+              className="group relative inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+              <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-400 to-primary-600 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
+              <span className="relative flex items-center gap-2">
+                <svg className="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                <span className="font-medium">Create Your Recipe</span>
+              </span>
+            </Link>
+
+            <Link 
+              href="/categories/manage" 
+              className="group relative inline-flex items-center justify-center px-8 py-4 bg-primary-100 text-primary-700 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <span className="absolute inset-0 bg-primary-200 opacity-0 group-hover:opacity-20 transition-opacity" />
+              <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-50 to-primary-200 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
+              <span className="relative flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <span className="font-medium">Manage Categories</span>
+              </span>
+            </Link>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
