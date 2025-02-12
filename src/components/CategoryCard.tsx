@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 interface CategoryCardProps {
   category: Category;
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => Promise<boolean>;
   onUpdate: (id: string, data: { name: string; description: string }) => Promise<void>;
 }
 
@@ -27,7 +27,16 @@ export default function CategoryCard({ category, onDelete, onUpdate }: CategoryC
     e.preventDefault();
     e.stopPropagation();
     setIsDeleting(true);
-    await onDelete(category._id);
+    
+    try {
+      const success = await onDelete(category._id);
+      if (!success) {
+        setIsDeleting(false);
+      }
+    } catch (error) {
+      setIsDeleting(false);
+    }
+    setShowConfirm(false);
   };
 
   const handleCancelDelete = (e: React.MouseEvent) => {

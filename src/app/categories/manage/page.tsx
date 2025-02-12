@@ -78,7 +78,7 @@ export default function ManageCategories() {
     }
   };
 
-  const handleDeleteCategory = async (id: string) => {
+  const handleDeleteCategory = async (id: string): Promise<boolean> => {
     try {
       const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
@@ -88,14 +88,16 @@ export default function ManageCategories() {
       
       if (!response.ok) {
         setError(data.error || 'Failed to delete category');
-        return;
+        return false;
       }
 
       setSuccess('Category deleted successfully!');
       fetchCategories();
+      return true;
     } catch (error) {
       setError('Error deleting category');
       console.error('Error deleting category:', error);
+      return false;
     }
   };
 
