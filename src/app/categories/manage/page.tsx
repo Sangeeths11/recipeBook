@@ -99,6 +99,31 @@ export default function ManageCategories() {
     }
   };
 
+  const handleUpdateCategory = async (id: string, data: { name: string; description: string }) => {
+    try {
+      const response = await fetch(`/api/categories/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        setError(responseData.error || 'Failed to update category');
+        return;
+      }
+
+      setSuccess('Category updated successfully!');
+      fetchCategories();
+    } catch (error) {
+      setError('Error updating category');
+      console.error('Error updating category:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -133,7 +158,7 @@ export default function ManageCategories() {
           <h2 className="text-xl font-semibold text-primary-700 mb-4">Add New Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-900 mb-1">
                 Category Name
               </label>
               <input
@@ -141,11 +166,11 @@ export default function ManageCategories() {
                 required
                 value={newCategory.name}
                 onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-900 mb-1">
                 Description
               </label>
               <input
@@ -153,7 +178,7 @@ export default function ManageCategories() {
                 required
                 value={newCategory.description}
                 onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
               />
             </div>
           </div>
@@ -181,6 +206,7 @@ export default function ManageCategories() {
                   key={category._id}
                   category={category}
                   onDelete={handleDeleteCategory}
+                  onUpdate={handleUpdateCategory}
                 />
               ))}
             </div>
