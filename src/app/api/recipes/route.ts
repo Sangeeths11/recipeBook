@@ -71,11 +71,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await connectDB();
-    
-    const data = await request.json();
-    const recipe = await Recipe.create(data);
-    
+    const body = await request.json();
+    const recipe = await Recipe.create({
+      ...body,
+      ingredients: body.ingredients.map((ing: any) => ({
+        ingredient: ing.ingredient,
+        amount: ing.amount
+      }))
+    });
+
+    await recipe.populate('ingredients.ingredient categories');
     return NextResponse.json({ success: true, data: recipe });
   } catch (error) {
     console.error('Error creating recipe:', error);

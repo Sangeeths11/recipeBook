@@ -22,7 +22,6 @@ export interface Ingredient extends BaseDocument {
 export interface RecipeIngredient {
   ingredient: string | Ingredient;
   amount: number;
-  unit: 'g' | 'kg' | 'ml' | 'l' | 'piece' | 'tbsp' | 'tsp' | 'cup';
 }
 
 // Comment type

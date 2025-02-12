@@ -8,7 +8,6 @@ import Link from 'next/link';
 type RecipeIngredient = {
   ingredient: string;
   amount: number;
-  unit: string;
 };
 
 export default function CreateRecipe() {
@@ -23,7 +22,7 @@ export default function CreateRecipe() {
     difficulty: '',
     instructions: '',
     categories: [] as string[],
-    ingredients: [{ ingredient: '', amount: 0, unit: 'g' }] as RecipeIngredient[],
+    ingredients: [{ ingredient: '', amount: 0 }] as RecipeIngredient[],
     image: null as File | null
   });
 
@@ -53,31 +52,17 @@ export default function CreateRecipe() {
 
   const updateIngredient = (index: number, field: keyof RecipeIngredient, value: string | number) => {
     const newIngredients = [...formData.ingredients];
-    
-    if (field === 'ingredient') {
-      // When ingredient is selected, set its default unit
-      const selectedIngredient = ingredients.find(ing => ing._id === value);
-      if (selectedIngredient) {
-        newIngredients[index] = {
-          ingredient: value as string,
-          amount: newIngredients[index].amount,
-          unit: selectedIngredient.defaultUnit
-        };
-      }
-    } else {
-      newIngredients[index] = {
-        ...newIngredients[index],
-        [field]: value
-      };
-    }
-    
+    newIngredients[index] = {
+      ...newIngredients[index],
+      [field]: value
+    };
     setFormData({ ...formData, ingredients: newIngredients });
   };
 
   const addIngredient = () => {
     setFormData(prev => ({
       ...prev,
-      ingredients: [...prev.ingredients, { ingredient: '', amount: 0, unit: 'g' }]
+      ingredients: [...prev.ingredients, { ingredient: '', amount: 0 }]
     }));
   };
 
@@ -91,20 +76,19 @@ export default function CreateRecipe() {
     setLoading(true);
 
     try {
-      // First create the recipe
+      const preparedIngredients = formData.ingredients.map(ing => ({
+        ingredient: ing.ingredient,
+        amount: ing.amount
+      }));
+
       const recipeResponse = await fetch('/api/recipes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          preparationTime: formData.preparationTime,
-          difficulty: formData.difficulty,
-          instructions: formData.instructions,
-          categories: formData.categories,
-          ingredients: formData.ingredients,
+          ...formData,
+          ingredients: preparedIngredients,
         }),
       });
 
@@ -305,31 +289,22 @@ export default function CreateRecipe() {
                       ))}
                     </select>
 
-                    <input
-                      type="number"
-                      required
-                      min="0"
-                      step="0.1"
-                      className="w-16 p-2 border rounded-md text-black text-sm"
-                      value={ingredient.amount}
-                      onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value))}
-                    />
-
-                    <select
-                      required
-                      className="w-20 p-2 border rounded-md text-black text-sm"
-                      value={ingredient.unit}
-                      onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
-                    >
-                      <option value="g">g</option>
-                      <option value="kg">kg</option>
-                      <option value="ml">ml</option>
-                      <option value="l">l</option>
-                      <option value="piece">pc</option>
-                      <option value="tbsp">tbsp</option>
-                      <option value="tsp">tsp</option>
-                      <option value="cup">cup</option>
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        step="0.1"
+                        className="w-16 p-2 border rounded-md text-black text-sm"
+                        value={ingredient.amount}
+                        onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value))}
+                      />
+                      <span className="text-gray-600">
+                        {ingredient.ingredient ? 
+                          ingredients.find(ing => ing._id === ingredient.ingredient)?.defaultUnit 
+                          : ''}
+                      </span>
+                    </div>
 
                     <button
                       type="button"

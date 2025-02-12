@@ -69,8 +69,16 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
       setAuthorName('');
       setRating(5);
 
-      // Refresh comments (go to first page)
+      // Setze die Seite zurück und lade die Kommentare neu
       setCurrentPage(1);
+      
+      // Lade die Kommentare sofort neu
+      const commentsResponse = await fetch(`/api/recipes/${id}/comments?page=1`);
+      const commentsData = await commentsResponse.json();
+      if (commentsData.success) {
+        setComments(commentsData.data);
+        setTotalPages(commentsData.pagination.pages);
+      }
       
       // Scroll to comment form
       commentFormRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -174,7 +182,7 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
                     {typeof ing.ingredient === 'string' ? ing.ingredient : ing.ingredient.name}
                   </span>
                   <span className="text-gray-600 text-sm ml-2">
-                    {ing.amount} {ing.unit}
+                    {ing.amount} {typeof ing.ingredient === 'string' ? '' : ing.ingredient.defaultUnit}
                   </span>
                 </div>
               </div>

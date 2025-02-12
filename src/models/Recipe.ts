@@ -9,13 +9,8 @@ const RecipeIngredientSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: true
-  },
-  unit: {
-    type: String,
-    required: true,
-    enum: ['g', 'kg', 'ml', 'l', 'piece', 'tbsp', 'tsp', 'cup']
   }
-});
+}, { _id: false });
 
 const RecipeSchema = new mongoose.Schema({
   title: {
