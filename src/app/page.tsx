@@ -135,6 +135,20 @@ export default function Home() {
                 <span className="font-medium">Manage Categories</span>
               </span>
             </Link>
+
+            <Link 
+              href="/ingredients/manage" 
+              className="group relative inline-flex items-center justify-center px-8 py-4 bg-primary-100 text-primary-700 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <span className="absolute inset-0 bg-primary-200 opacity-0 group-hover:opacity-20 transition-opacity" />
+              <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-50 to-primary-200 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
+              <span className="relative flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <span className="font-medium">Manage Ingredients</span>
+              </span>
+            </Link>
           </div>
         </div>
 
