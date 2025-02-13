@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Ingredient from '@/models/Ingredient';
 import Recipe from '@/models/Recipe';
+import mongoose from 'mongoose';
 
 // Get the valid units from the Mongoose schema
 const validUnits = (Ingredient.schema.path('defaultUnit') as any).enumValues;
@@ -39,43 +40,22 @@ export async function PUT(
 ) {
   const { id } = await context.params;
 
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid ID format' },
+      { status: 400 }
+    );
+  }
+
   try {
     await connectDB();
     const data = await request.json();
-
-    // Validate required fields
-    if (!data.name || !data.defaultUnit) {
-      return NextResponse.json(
-        { success: false, error: 'Name and default unit are required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate defaultUnit enum values
-    if (!validUnits.includes(data.defaultUnit)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid default unit. Must be one of: ' + validUnits.join(', ') },
-        { status: 400 }
-      );
-    }
-
-    // Check if new name already exists (excluding current ingredient)
-    const existingIngredient = await Ingredient.findOne({
-      _id: { $ne: id },
-      name: { $regex: `^${data.name}$`, $options: 'i' }
-    });
-
-    if (existingIngredient) {
-      return NextResponse.json(
-        { success: false, error: 'Ingredient name already exists' },
-        { status: 400 }
-      );
-    }
-
+    
     const ingredient = await Ingredient.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!ingredient) {
@@ -86,11 +66,14 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, data: ingredient });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating ingredient:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to update ingredient' },
-      { status: 500 }
+      { 
+        success: false, 
+        error: error.message || 'Failed to update ingredient'
+      },
+      { status: 400 }
     );
   }
 }
@@ -101,10 +84,16 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid ID format' },
+      { status: 400 }
+    );
+  }
+
   try {
     await connectDB();
     
-    // Check if ingredient is used in any recipes
     const recipesUsingIngredient = await Recipe.findOne({ 'ingredients.ingredient': id });
     if (recipesUsingIngredient) {
       return NextResponse.json(
@@ -121,12 +110,12 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting ingredient:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to delete ingredient' + error },
+      { success: false, error: 'Failed to delete ingredient' },
       { status: 500 }
     );
   }

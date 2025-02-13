@@ -19,7 +19,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
               _id: "string",
               title: "string",
               description: "string",
-              difficulty: "easy|medium|hard",
+              difficulty: "string",
               preparationTime: "number",
               categories: ["Category"],
               ingredients: [{
@@ -195,6 +195,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "DELETE",
           path: "/categories/:id",
           description: "Delete a category (fails if used in recipes)",
+          params: [
+            { name: "id", description: "Category ID" }
+          ],
           response: {
             success: true
           }
@@ -203,6 +206,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "PUT",
           path: "/categories/:id",
           description: "Update a category",
+          params: [
+            { name: "id", description: "Category ID" }
+          ],
           requestBody: {
             name: "string",
             description: "string"
@@ -238,23 +244,28 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "GET",
           path: "/ingredients",
           description: "Get all ingredients",
+          params: [
+            { name: "name", description: "Name of the ingredient (required, max 50 chars, unique)" },
+            { name: "defaultUnit", description: "Default unit (required, one of: g, kg, ml, l, piece, tbsp, tsp, cup)" },
+            { name: "description", description: "Description of the ingredient (optional, max 200 chars)" }
+          ],
           response: {
             success: true,
             data: [{
               _id: "string",
-              name: "string (required, max 50 chars, unique)",
-              defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup (required)",
-              description: "string (optional, max 200 chars)"
+              name: "string",
+              defaultUnit: "string",
+              description: "string"
             }]
           }
         },
         {
           method: "POST",
           path: "/ingredients",
-          description: "Create a new ingredient\n\nRequired fields:\n• name (max 50 chars, unique)\n• defaultUnit (g|kg|ml|l|piece|tbsp|tsp|cup)\n\nOptional fields:\n• description (max 200 chars)",
+          description: "Create a new ingredient",
           requestBody: {
             name: "string",
-            defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup",
+            defaultUnit: "g",
             description: "string"
           },
           response: {
@@ -266,6 +277,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "PUT",
           path: "/ingredients/:id",
           description: "Update an ingredient",
+          params: [
+            { name: "id", description: "Ingredient ID" }
+          ],
           requestBody: {
             name: "string",
             defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup",
