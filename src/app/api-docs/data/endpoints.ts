@@ -69,6 +69,7 @@ export const endpoints: Endpoint[] = [
   { method: 'DELETE', path: '/ingredients/:id', description: 'Delete an ingredient' },
 
   // Comment endpoints
+  { method: 'GET', path: '/recipes/:id/comments', description: 'Get comments for a recipe with pagination' },
   { method: 'POST', path: '/recipes/:id/comments', description: 'Add a comment to a recipe', exampleBody: JSON.stringify({
     text: "Great recipe!",
     authorName: "John Doe",

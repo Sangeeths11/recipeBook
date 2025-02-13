@@ -153,11 +153,16 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/recipes/:id/comments",
-          description: "Add a comment to a recipe\n\nRequired fields:\n• text (max 500 chars)\n• authorName (max 50 chars)\n• rating (1-5)",
+          description: "Add a comment to a recipe",
+          params: [
+            { name: "text", description: "Text of the comment (required, max 500 chars)" },
+            { name: "authorName", description: "Name of the author (required, max 50 chars)" },
+            { name: "rating", description: "Rating of the comment (required, 1-5)" }
+          ],
           requestBody: {
             text: "string",
             authorName: "string",
-            rating: "number"
+            rating: "number (1-5)"
           },
           response: {
             success: true,
@@ -302,5 +307,5 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           }
         }
       ]
-    }
+    },
   ]; 

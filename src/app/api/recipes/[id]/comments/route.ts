@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Comment from '@/models/Comment';
+import Recipe from '@/models/Recipe';
+import mongoose from 'mongoose';
 
 // GET comments for a specific recipe
 export async function GET(
@@ -8,28 +10,36 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectDB();
     const { id } = await params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid ID format' },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = 3; // Comments per page
+    const limit = 3;
     
     const skip = (page - 1) * limit;
     
-    const [comments, total] = await Promise.all([
-      Comment.find({ recipe: id })
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit),
-      Comment.countDocuments({ recipe: id })
-    ]);
+    const comments = await Comment.find({ recipe: id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+    const total = await Comment.countDocuments({ recipe: id });
+    const pages = Math.ceil(total / limit);
     
     return NextResponse.json({
       success: true,
       data: comments,
       pagination: {
         total,
-        pages: Math.ceil(total / limit),
+        pages,
         current: page
       }
     });
@@ -48,25 +58,17 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectDB();
     const { id } = await params;
-    const body = await request.json();
-    
-    // Validate required fields
-    if (!body.text || !body.authorName || !body.rating) {
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: 'Invalid ID format' },
         { status: 400 }
       );
     }
 
-    // Validate rating
-    if (body.rating < 1 || body.rating > 5) {
-      return NextResponse.json(
-        { success: false, error: 'Rating must be between 1 and 5' },
-        { status: 400 }
-      );
-    }
+    await connectDB();
+    const body = await request.json();
 
     const comment = await Comment.create({
       recipe: id,
@@ -79,11 +81,10 @@ export async function POST(
       success: true,
       data: comment
     });
-  } catch (error) {
-    console.error('Error creating comment:', error);
+  } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: 'Failed to create comment' },
-      { status: 500 }
+      { success: false, error: error.message || 'Failed to create comment' },
+      { status: 400 }
     );
   }
 } 
