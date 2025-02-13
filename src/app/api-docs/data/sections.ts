@@ -43,7 +43,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/recipes",
-          description: "Create a new recipe",
+          description: "Create a new recipe\n\nRequired fields:\n• title (max 100 chars)\n• description\n• preparationTime (min 1)\n• difficulty (easy|medium|hard)\n• ingredients (array)\n  - ingredient (ingredientId)\n  - amount (number)\n• instructions\n\nOptional fields:\n• categories (array of categoryIds)",
           requestBody: {
             title: "string",
             description: "string",
@@ -153,11 +153,11 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/recipes/:id/comments",
-          description: "Add a comment to a recipe",
+          description: "Add a comment to a recipe\n\nRequired fields:\n• text (max 500 chars)\n• authorName (max 50 chars)\n• rating (1-5)",
           requestBody: {
             text: "string",
             authorName: "string",
-            rating: "number (1-5)"
+            rating: "number"
           },
           response: {
             success: true,
@@ -215,6 +215,10 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/categories",
+          params: [
+            { name: "name", description: "Name of the category (max 50 chars, unique, required)" },
+            { name: "description", description: "Description of the category (max 200 chars, required)" }
+          ],
           description: "Create a new category",
           requestBody: {
             name: "string",
@@ -247,11 +251,11 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/ingredients",
-          description: "Create a new ingredient",
+          description: "Create a new ingredient\n\nRequired fields:\n• name (max 50 chars, unique)\n• defaultUnit (g|kg|ml|l|piece|tbsp|tsp|cup)\n\nOptional fields:\n• description (max 200 chars)",
           requestBody: {
             name: "string",
             defaultUnit: "g|kg|ml|l|piece|tbsp|tsp|cup",
-            description: "string (optional)"
+            description: "string"
           },
           response: {
             success: true,

@@ -61,57 +61,43 @@ export async function PUT(
 
   try {
     await connectDB();
-    
-    // Validate JSON format
-    let data;
-    try {
-      data = await request.json();
-    } catch (e) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid JSON format in request body' },
-        { status: 400 }
-      );
-    }
+    const data = await request.json();
 
-    // Validate required fields
-    if (!data.name || !data.description) {
-      return NextResponse.json(
-        { success: false, error: 'Name and description are required' },
-        { status: 400 }
-      );
-    }
-
-    // Check if new name already exists (excluding current category)
-    const existingCategory = await Category.findOne({
-      _id: { $ne: id },
-      name: { $regex: `^${data.name}$`, $options: 'i' }
-    });
-
-    if (existingCategory) {
-      return NextResponse.json(
-        { success: false, error: 'Category name already exists' },
-        { status: 400 }
-      );
-    }
-
-    const category = await Category.findByIdAndUpdate(
-      id,
-      { $set: data },
-      { new: true }
-    );
-
-    if (!category) {
+    // First get the current category
+    const currentCategory = await Category.findById(id);
+    if (!currentCategory) {
       return NextResponse.json(
         { success: false, error: 'Category not found' },
         { status: 404 }
       );
     }
 
+    // Only check for name conflicts if the name is being changed
+    if (data.name && data.name !== currentCategory.name) {
+      const existingCategory = await Category.findOne({
+        _id: { $ne: id },
+        name: { $regex: `^${data.name}$`, $options: 'i' }
+      });
+
+      if (existingCategory) {
+        return NextResponse.json(
+          { success: false, error: 'Category name already exists' },
+          { status: 400 }
+        );
+      }
+    }
+
+    const category = await Category.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { new: true, runValidators: true }
+    );
+
     return NextResponse.json({ success: true, data: category });
   } catch (error) {
     console.error('Error updating category:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to update category' },
+      { success: false, error: (error as Error).message },
       { status: 500 }
     );
   }
