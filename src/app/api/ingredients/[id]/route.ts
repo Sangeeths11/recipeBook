@@ -52,18 +52,35 @@ export async function PUT(
     await connectDB();
     const data = await request.json();
     
-    const ingredient = await Ingredient.findByIdAndUpdate(
-      id,
-      { $set: data },
-      { new: true, runValidators: true }
-    );
-
-    if (!ingredient) {
+    // First get the current ingredient
+    const currentIngredient = await Ingredient.findById(id);
+    if (!currentIngredient) {
       return NextResponse.json(
         { success: false, error: 'Ingredient not found' },
         { status: 404 }
       );
     }
+
+    // Only check for name conflicts if the name is being changed
+    if (data.name && data.name !== currentIngredient.name) {
+      const existingIngredient = await Ingredient.findOne({
+        _id: { $ne: id }, // Exclude current ingredient
+        name: { $regex: `^${data.name}$`, $options: 'i' }
+      });
+
+      if (existingIngredient) {
+        return NextResponse.json(
+          { success: false, error: 'An ingredient with this name already exists' },
+          { status: 400 }
+        );
+      }
+    }
+
+    const ingredient = await Ingredient.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { new: true, runValidators: true }
+    );
 
     return NextResponse.json({ success: true, data: ingredient });
   } catch (error: any) {

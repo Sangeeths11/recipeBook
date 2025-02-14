@@ -43,7 +43,14 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/recipes",
-          description: "Create a new recipe\n\nRequired fields:\n• title (max 100 chars)\n• description\n• preparationTime (min 1)\n• difficulty (easy|medium|hard)\n• ingredients (array)\n  - ingredient (ingredientId)\n  - amount (number)\n• instructions\n\nOptional fields:\n• categories (array of categoryIds)",
+          params: [
+            { name: "title", description: "Title of the recipe (required, max 100 chars)" },
+            { name: "description", description: "Description of the recipe (required)" },
+            { name: "preparationTime", description: "Preparation time in minutes (required, min 1)" },
+            { name: "difficulty", description: "Difficulty of the recipe (required, one of: easy, medium, hard)" },
+            { name: "ingredients", description: "Array of ingredients (required)" },
+          ],
+          description: "Create a new recipe",
           requestBody: {
             title: "string",
             description: "string",

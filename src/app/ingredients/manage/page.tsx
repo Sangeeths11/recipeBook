@@ -198,7 +198,6 @@ export default function ManageIngredients() {
               </label>
               <input
                 type="text"
-                required
                 value={newIngredient.description}
                 onChange={(e) => setNewIngredient({ ...newIngredient, description: e.target.value })}
                 className="w-full p-2 border rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
