@@ -1,4 +1,10 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+// Load environment variables if not in Next.js context
+if (!process.env.NEXT_RUNTIME) {
+  dotenv.config({ path: '.env.local' });
+}
 
 declare global {
   var mongoose: {
@@ -26,7 +32,7 @@ async function connectDB() {
 
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
+      bufferCommands: false
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then(() => {

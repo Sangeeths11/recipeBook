@@ -2,6 +2,7 @@ version: '3.8'
 services:
   web:
     build: .
+    command: sh -c "npm run seed && npm run dev"
     ports:
       - "3005:3005"
     environment:
