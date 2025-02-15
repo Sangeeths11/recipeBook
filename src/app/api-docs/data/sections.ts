@@ -43,12 +43,14 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/recipes",
-          params: [
+          fieldDescription: [
             { name: "title", description: "Title of the recipe (required, max 100 chars)" },
             { name: "description", description: "Description of the recipe (required)" },
             { name: "preparationTime", description: "Preparation time in minutes (required, min 1)" },
             { name: "difficulty", description: "Difficulty of the recipe (required, one of: easy, medium, hard)" },
-            { name: "ingredients", description: "Array of ingredients (required)" },
+            { name: "ingredients", description: "Array of ingredients" },
+            { name: "instructions", description: "Step by step instructions (required)" },
+            { name: "categories", description: "Array of category IDs" },
           ],
           description: "Create a new recipe",
           requestBody: {
@@ -71,6 +73,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "GET",
           path: "/recipes/:id",
+          params: [
+            { name: "id", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
+          ],
           description: "Get a specific recipe by ID",
           response: {
             success: true,
@@ -80,6 +85,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "PUT",
           path: "/recipes/:id",
+          params: [
+            { name: "id", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
+          ],
           description: "Update a recipe. For image updates, use the /recipes/upload endpoint separately.",
           requestBody: {
             title: "string",
@@ -100,35 +108,40 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         },
         {
           method: "DELETE",
+          params: [
+            { name: "id", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
+          ],
           path: "/recipes/:id",
           description: "Delete a recipe",
           response: {
             success: true
           }
         },
-        {
-          method: "POST",
-          path: "/recipes/upload",
-          description: "Upload an image for a recipe",
-          requestBody: {
-            type: "multipart/form-data",
-            fields: {
-              image: "File (image/*)",
-              recipeId: "string"
-            }
-          },
-          response: {
-            success: true,
-            data: {
-              _id: "string",
-              image: {
-                data: "Buffer",
-                contentType: "string"
-              }
-              // ... other recipe fields
-            }
-          }
-        }
+        // {
+        //   method: "POST",
+        //   path: "/recipes/upload",
+        //   description: "Upload an image for a recipe",
+        //   params: [
+        //     { name: "recipeId", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
+        //   ],
+        //   requestBody: {
+        //     type: "multipart/form-data",
+        //     fields: {
+        //       image: "File (image/*) - Required",
+        //       recipeId: "string (valid MongoDB ObjectId) - Required"
+        //     }
+        //   },
+        //   response: {
+        //     success: true,
+        //     data: {
+        //       _id: "string",
+        //       image: {
+        //         data: "Buffer",
+        //         contentType: "string"
+        //       }
+        //     }
+        //   },
+        // }
       ]
     },
     {
@@ -161,10 +174,13 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "POST",
           path: "/recipes/:id/comments",
           description: "Add a comment to a recipe",
-          params: [
+          fieldDescription: [
             { name: "text", description: "Text of the comment (required, max 500 chars)" },
             { name: "authorName", description: "Name of the author (required, max 50 chars)" },
             { name: "rating", description: "Rating of the comment (required, 1-5)" }
+          ],
+          params: [
+            { name: "id", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
           ],
           requestBody: {
             text: "string",
@@ -198,6 +214,9 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "GET",
           path: "/categories/:id",
           description: "Get a specific category",
+          params: [
+            { name: "id", description: "ID of the category (required, must be a valid MongoDB ObjectId)" }
+          ],
           response: {
             success: true,
             data: "Category Object"
@@ -206,10 +225,10 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "DELETE",
           path: "/categories/:id",
-          description: "Delete a category (fails if used in recipes)",
           params: [
             { name: "id", description: "Category ID" }
           ],
+          description: "Delete a category (fails if used in recipes)",
           response: {
             success: true
           }
@@ -233,7 +252,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/categories",
-          params: [
+          fieldDescription: [
             { name: "name", description: "Name of the category (max 50 chars, unique, required)" },
             { name: "description", description: "Description of the category (max 200 chars, required)" }
           ],
@@ -256,11 +275,6 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
           method: "GET",
           path: "/ingredients",
           description: "Get all ingredients",
-          params: [
-            { name: "name", description: "Name of the ingredient (required, max 50 chars, unique)" },
-            { name: "defaultUnit", description: "Default unit (required, one of: g, kg, ml, l, piece, tbsp, tsp, cup)" },
-            { name: "description", description: "Description of the ingredient (optional, max 200 chars)" }
-          ],
           response: {
             success: true,
             data: [{
@@ -274,6 +288,11 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
         {
           method: "POST",
           path: "/ingredients",
+          fieldDescription: [
+            { name: "name", description: "Name of the ingredient (required, max 50 chars, unique)" },
+            { name: "defaultUnit", description: "Default unit (required, one of: g, kg, ml, l, piece, tbsp, tsp, cup)" },
+            { name: "description", description: "Description of the ingredient (optional, max 200 chars)" }
+          ],
           description: "Create a new ingredient",
           requestBody: {
             name: "string",

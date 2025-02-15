@@ -3,6 +3,7 @@ export interface Endpoint {
   path: string;
   description?: string;
   params?: { name: string; description: string; }[];
+  fieldDescription?: { name: string; description: string; }[];
   requestBody?: any;
   response?: any;
   exampleBody?: string;

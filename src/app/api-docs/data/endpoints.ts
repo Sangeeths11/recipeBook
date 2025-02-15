@@ -27,18 +27,18 @@ export const endpoints: Endpoint[] = [
     instructions: "Updated step by step instructions"
   }, null, 2) },
   { method: 'DELETE', path: '/recipes/:id', description: 'Delete a recipe' },
-  {
-    method: 'POST',
-    path: '/recipes/upload',
-    description: 'Upload recipe image',
-    exampleBody: JSON.stringify({
-      note: "This endpoint requires multipart/form-data",
-      formData: {
-        image: "File (image/*)",
-        recipeId: "string (recipe ID)"
-      }
-    }, null, 2)
-  },
+  // {
+  //   method: 'POST',
+  //   path: '/recipes/upload',
+  //   description: 'Upload recipe image',
+  //   exampleBody: JSON.stringify({
+  //     note: "This endpoint requires multipart/form-data",
+  //     formData: {
+  //       image: "File (image/*)",
+  //       recipeId: "string (recipe ID)"
+  //     }
+  //   }, null, 2)
+  // },
   
   // Category endpoints
   { method: 'GET', path: '/categories', description: 'Get all categories' },

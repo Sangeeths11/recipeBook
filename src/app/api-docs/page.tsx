@@ -13,6 +13,7 @@ export default function ApiDocs() {
   } | null>(null);
   
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [expandedMethods, setExpandedMethods] = useState<string[]>([]);
 
   const handleEndpointSelect = (path: string, method: string, body?: string) => {
     setSelectedEndpoint({ path, method, body });
@@ -28,6 +29,14 @@ export default function ApiDocs() {
       prev.includes(title) 
         ? prev.filter(t => t !== title)
         : [...prev, title]
+    );
+  };
+
+  const toggleMethod = (methodKey: string) => {
+    setExpandedMethods(prev => 
+      prev.includes(methodKey) 
+        ? prev.filter(key => key !== methodKey)
+        : [...prev, methodKey]
     );
   };
 
@@ -76,56 +85,91 @@ export default function ApiDocs() {
                     <div key={`${endpoint.method}-${endpoint.path}-${index}`} 
                          className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className={`px-2 py-1 rounded text-sm font-medium
-                          ${endpoint.method === 'GET' ? 'bg-blue-100 text-blue-700' :
-                            endpoint.method === 'POST' ? 'bg-green-100 text-green-700' :
-                            endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'}`}>
-                          {endpoint.method}
-                        </span>
-                        <code className="text-gray-900 font-mono">{endpoint.path}</code>
                         <button
-                          onClick={() => handleEndpointSelect(
-                            endpoint.path,
-                            endpoint.method,
-                            endpoint.requestBody ? JSON.stringify(endpoint.requestBody, null, 2) : undefined
-                          )}
-                          className="ml-auto text-sm text-blue-600 hover:text-blue-800"
+                          onClick={() => toggleMethod(`${section.title}-${endpoint.method}-${endpoint.path}`)}
+                          className="flex items-center gap-2 w-full"
                         >
-                          Try it
+                          <span className={`px-2 py-1 rounded text-sm font-medium
+                            ${endpoint.method === 'GET' ? 'bg-blue-100 text-blue-700' :
+                              endpoint.method === 'POST' ? 'bg-green-100 text-green-700' :
+                              endpoint.method === 'PUT' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-red-100 text-red-700'}`}>
+                            {endpoint.method}
+                          </span>
+                          <code className="text-gray-900 font-mono flex-1">{endpoint.path}</code>
+                          <svg
+                            className={`w-5 h-5 text-gray-500 transform transition-transform ${
+                              expandedMethods.includes(`${section.title}-${endpoint.method}-${endpoint.path}`) 
+                                ? 'rotate-180' 
+                                : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
                         </button>
                       </div>
 
-                      <p className="text-gray-600 mb-3">{endpoint.description}</p>
+                      {expandedMethods.includes(`${section.title}-${endpoint.method}-${endpoint.path}`) && (
+                        <div className="pl-4 mt-4 space-y-4 border-l-2 border-gray-100">
+                          <p className="text-gray-600">{endpoint.description}</p>
 
-                      {endpoint.params && endpoint.params.length > 0 && (
-                        <div className="mb-3">
-                          <h4 className="font-medium text-gray-900 mb-2">Query Parameters:</h4>
-                          <ul className="list-disc list-inside space-y-1 text-gray-600">
-                            {endpoint.params.map((param) => (
-                              <li key={param.name}>
-                                <code className="text-gray-900">{param.name}</code>: {param.description}
-                              </li>
-                            ))}
-                          </ul>
+                          {endpoint.params && endpoint.params.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Parameters:</h4>
+                              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                {endpoint.params.map((param) => (
+                                  <li key={param.name}>
+                                    <code className="text-gray-900">{param.name}</code>: {param.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {endpoint.fieldDescription && endpoint.fieldDescription.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Field Descriptions:</h4>
+                              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                                {endpoint.fieldDescription.map((field) => (
+                                  <li key={field.name}>
+                                    <code className="text-gray-900">{field.name}</code>: {field.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {endpoint.requestBody && (
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Request Body:</h4>
+                              <pre className="bg-gray-50 p-3 rounded text-sm overflow-auto text-gray-900">
+                                {JSON.stringify(endpoint.requestBody, null, 2)}
+                              </pre>
+                            </div>
+                          )}
+
+                          <div>
+                            <h4 className="font-medium text-gray-900 mb-2">Response:</h4>
+                            <pre className="bg-gray-50 p-4 rounded-md text-sm font-mono overflow-auto border border-gray-200 text-gray-900">
+                              {JSON.stringify(endpoint.response, null, 2)}
+                            </pre>
+                          </div>
+
+                          <button
+                            onClick={() => handleEndpointSelect(
+                              endpoint.path,
+                              endpoint.method,
+                              endpoint.requestBody ? JSON.stringify(endpoint.requestBody, null, 2) : undefined
+                            )}
+                            className="text-sm text-primary-600 hover:text-primary-800 font-medium"
+                          >
+                            Try it →
+                          </button>
                         </div>
                       )}
-
-                      {endpoint.requestBody && (
-                        <div className="mb-3">
-                          <h4 className="font-medium text-gray-900 mb-2">Request Body:</h4>
-                          <pre className="bg-gray-50 p-3 rounded text-sm overflow-auto text-gray-900">
-                            {JSON.stringify(endpoint.requestBody, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-
-                      <div>
-                        <h4 className="font-medium text-gray-900 mb-2">Response:</h4>
-                        <pre className="bg-gray-50 p-4 rounded-md text-base font-mono overflow-auto border border-gray-200 text-gray-900">
-                          {JSON.stringify(endpoint.response, null, 2)}
-                        </pre>
-                      </div>
                     </div>
                   ))}
                 </div>
