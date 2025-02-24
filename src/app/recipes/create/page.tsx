@@ -67,8 +67,11 @@ export default function CreateRecipe() {
   };
 
   const removeIngredient = (index: number) => {
-    const newIngredients = formData.ingredients.filter((_, i) => i !== index);
-    setFormData({ ...formData, ingredients: newIngredients });
+    // Only allow removal if there's more than one ingredient
+    if (formData.ingredients.length > 1) {
+      const newIngredients = formData.ingredients.filter((_, i) => i !== index);
+      setFormData({ ...formData, ingredients: newIngredients });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -128,18 +131,18 @@ export default function CreateRecipe() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-700">Create New Recipe</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-700">Create New Recipe</h1>
           <Link
             href="/"
-            className="px-6 py-2 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors"
+            className="w-full sm:w-auto px-6 py-2 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors text-center"
           >
             Back to Home
           </Link>
         </div>
         
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6">
-          <div className="grid grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-4">
               <div>
@@ -164,7 +167,7 @@ export default function CreateRecipe() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Prep Time (min)</label>
                   <input
@@ -194,7 +197,7 @@ export default function CreateRecipe() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {categories.map((category) => (
                     <label key={category._id} className="flex items-center space-x-2">
                       <input
@@ -232,15 +235,15 @@ export default function CreateRecipe() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Recipe Image</label>
-                <div className="mt-1 flex items-center">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">Recipe Image</label>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   {formData.image && (
-                    <div className="relative w-24 h-24 mr-4">
+                    <div className="relative w-full sm:w-24 h-24">
                       <img
                         src={URL.createObjectURL(formData.image)}
                         alt="Preview"
-                        className="w-24 h-24 object-cover rounded-md"
+                        className="w-full sm:w-24 h-24 object-cover rounded-md"
                       />
                       <button
                         type="button"
@@ -255,7 +258,7 @@ export default function CreateRecipe() {
                       </button>
                     </div>
                   )}
-                  <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  <label className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                     <svg className="h-5 w-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -271,12 +274,12 @@ export default function CreateRecipe() {
               </div>
             </div>
 
-            {/* Right Column */}
+            {/* Right Column - Ingredients */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ingredients</label>
               <div className="space-y-2 max-h-[calc(100vh-250px)] overflow-y-auto pr-2">
                 {formData.ingredients.map((ingredient, index) => (
-                  <div key={index} className="flex gap-2">
+                  <div key={index} className="flex flex-col sm:flex-row gap-2">
                     <select
                       required
                       className="flex-1 p-2 border rounded-md text-black text-sm"
@@ -285,34 +288,38 @@ export default function CreateRecipe() {
                     >
                       <option value="">Select ingredient</option>
                       {ingredients.map((ing) => (
-                        <option key={ing._id} value={ing._id}>{ing.name}</option>
+                        <option key={ing._id} value={ing._id}>
+                          {ing.name}
+                        </option>
                       ))}
                     </select>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <input
                         type="number"
                         required
                         min="0"
                         step="0.1"
-                        className="w-16 p-2 border rounded-md text-black text-sm"
+                        className="w-24 sm:w-16 p-2 border rounded-md text-black text-sm"
                         value={ingredient.amount}
                         onChange={(e) => updateIngredient(index, 'amount', parseFloat(e.target.value))}
                       />
-                      <span className="text-gray-600">
+                      <span className="text-gray-600 w-8">
                         {ingredient.ingredient ? 
                           ingredients.find(ing => ing._id === ingredient.ingredient)?.defaultUnit 
                           : ''}
                       </span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => removeIngredient(index)}
-                      className="p-1 text-red-600 hover:text-red-800"
-                    >
-                      ✕
-                    </button>
+                    {formData.ingredients.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeIngredient(index)}
+                        className="p-1 text-red-600 hover:text-red-800"
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
