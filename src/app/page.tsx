@@ -100,25 +100,25 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-primary-700 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-primary-700 mb-4">
             Discover Delicious Recipes
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-8 px-4">
             Find your next culinary inspiration from our collection of handpicked recipes
           </p>
           
           <div className="flex justify-center gap-4">
             <Link 
               href="/recipes/create" 
-              className="group relative inline-flex items-center justify-center px-8 py-4 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
               <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-400 to-primary-600 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
               <span className="relative flex items-center gap-2">
-                <svg className="w-6 h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="font-medium">Create Your Recipe</span>
+                <span className="text-sm sm:text-base font-medium">Create Your Recipe</span>
               </span>
             </Link>
 
