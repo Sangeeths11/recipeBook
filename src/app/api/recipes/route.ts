@@ -82,10 +82,61 @@ export async function POST(request: Request) {
 
     await recipe.populate('ingredients.ingredient categories');
     return NextResponse.json({ success: true, data: recipe });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating recipe:', error);
+    
+    // Mongoose Validation Error
+    if (error.name === 'ValidationError') {
+      const validationErrors: string[] = [];
+      
+      Object.keys(error.errors).forEach((key) => {
+        if (error.errors[key].name === 'CastError') {
+          if (key.includes('ingredients')) {
+            if (key.includes('ingredient')) {
+              validationErrors.push(`Invalid ingredient ID format`);
+            } else if (key.includes('amount')) {
+              validationErrors.push(`Ingredient amount must be a number`);
+            }
+          } else if (key === 'preparationTime') {
+            validationErrors.push('Preparation time must be a number');
+          } else if (key.includes('categories')) {
+            validationErrors.push('Invalid category ID format');
+          }
+        } else if (error.errors[key].name === 'EnumError') {
+          validationErrors.push(`Difficulty must be one of: easy, medium, hard`);
+        } else {
+          validationErrors.push(error.errors[key].message);
+        }
+      });
+
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Validation failed',
+          details: validationErrors
+        },
+        { status: 400 }
+      );
+    }
+
+    // Cast Error (ungültige ObjectId)
+    if (error.name === 'CastError') {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid ID format',
+          details: ['Please provide valid IDs for ingredients and categories']
+        },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
-      { success: false, error: 'Failed to create recipe' },
+      { 
+        success: false, 
+        error: 'Failed to create recipe',
+        details: [error.message || 'An unexpected error occurred']
+      },
       { status: 500 }
     );
   }

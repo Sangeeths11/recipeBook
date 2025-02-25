@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Recipe from '@/models/Recipe';
+import mongoose from 'mongoose';
 
 export async function DELETE(
   request: Request,
@@ -8,25 +9,36 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
-  if (!id) {
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
-      { success: false, error: 'Recipe ID is required' },
+      { 
+        success: false, 
+        error: 'Invalid ID format. Must be a 24-character hexadecimal string.' 
+      },
       { status: 400 }
     );
   }
 
   try {
     await connectDB();
-    const recipe = await Recipe.findByIdAndDelete(id);
     
+    // Check if recipe exists
+    const recipe = await Recipe.findById(id);
     if (!recipe) {
       return NextResponse.json(
-        { success: false, message: 'Recipe already deleted or not found' },
-        { status: 200 }
+        { success: false, error: 'Recipe not found' },
+        { status: 404 }
       );
     }
+
+    // Delete recipe
+    await Recipe.findByIdAndDelete(id);
     
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Recipe deleted successfully' 
+    });
   } catch (error) {
     console.error('Error deleting recipe:', error);
     return NextResponse.json(
@@ -41,6 +53,17 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   const { id } = await context.params;
+
+  // Validate MongoDB ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Invalid ID format. Must be a 24-character hexadecimal string.' 
+      },
+      { status: 400 }
+    );
+  }
 
   try {
     await connectDB();

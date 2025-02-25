@@ -48,7 +48,7 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
             { name: "description", description: "Description of the recipe (required)" },
             { name: "preparationTime", description: "Preparation time in minutes (required, min 1)" },
             { name: "difficulty", description: "Difficulty of the recipe (required, one of: easy, medium, hard)" },
-            { name: "ingredients", description: "Array of ingredients" },
+            { name: "ingredients", description: "Array of ingredients (required)" },
             { name: "instructions", description: "Step by step instructions (required)" },
             { name: "categories", description: "Array of category IDs" },
           ],
