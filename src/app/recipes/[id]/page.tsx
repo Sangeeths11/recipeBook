@@ -96,11 +96,11 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-700">Recipe Details</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-700">Recipe Details</h1>
           <Link
             href="/"
-            className="group relative inline-flex items-center justify-center px-6 py-2 bg-primary-100 text-primary-700 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="w-full sm:w-auto group relative inline-flex items-center justify-center px-6 py-2 bg-primary-100 text-primary-700 rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             <span className="absolute inset-0 bg-primary-200 opacity-0 group-hover:opacity-20 transition-opacity" />
             <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-50 to-primary-200 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
@@ -108,13 +108,12 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
           </Link>
         </div>
 
-        {/* Recipe Header with Glass Effect */}
-        <div className="relative mb-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-          <div className="flex justify-between items-start mb-4">
-            <h1 className="text-4xl font-bold text-primary-700 font-display">{recipe.title}</h1>
+        <div className="relative mb-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 sm:gap-0 mb-4">
+            <h1 className="text-2xl sm:text-4xl font-bold text-primary-700 font-display text-center sm:text-left">{recipe.title}</h1>
             <Link 
               href={`/recipes/${recipe._id}/edit`}
-              className="group relative inline-flex items-center justify-center px-6 py-2 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="w-full sm:w-auto group relative inline-flex items-center justify-center px-6 py-2 bg-primary-600 text-white rounded-full overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
               <span className="absolute -inset-full group-hover:inset-0 bg-gradient-to-r from-primary-400 to-primary-600 transform rotate-180 group-hover:rotate-0 transition-all duration-500" />
@@ -122,8 +121,7 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
             </Link>
           </div>
           
-          {/* Recipe Image with Gradient Overlay */}
-          <div className="relative h-[500px] w-full mb-6 rounded-lg overflow-hidden">
+          <div className="relative h-[300px] sm:h-[500px] w-full mb-6 rounded-lg overflow-hidden">
             {recipe.image ? (
               <>
                 <Image
@@ -145,21 +143,20 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
             )}
           </div>
 
-          {/* Recipe Info Cards */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-transform duration-200">
               <div className="flex items-center justify-center space-x-2">
-                <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
                   <p className="text-sm text-primary-600 font-medium">Prep Time</p>
-                  <p className="text-2xl font-bold text-gray-900">{recipe.preparationTime} min</p>
+                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{recipe.preparationTime} min</p>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-4">
+            <div className="bg-white rounded-xl shadow-md p-4 col-span-1 sm:col-span-2">
               <p className="text-sm text-primary-600 font-medium text-center mb-2">Categories</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {recipe.categories.map((category: any) => (
@@ -174,18 +171,17 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
             </div>
           </div>
 
-          <p className="text-gray-600 text-lg leading-relaxed mb-8">{recipe.description}</p>
+          <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-8">{recipe.description}</p>
         </div>
 
-        {/* Ingredients Section */}
-        <div className="mb-12 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-primary-700 mb-6 flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mb-12 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-primary-700 mb-4 sm:mb-6 flex items-center">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             Ingredients
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {recipe.ingredients.map((ing: any, index: number) => (
               <div key={index} className="bg-white p-4 rounded-lg shadow-sm flex items-center space-x-3 transform hover:scale-105 transition-transform duration-200">
                 <div className="w-2 h-2 rounded-full bg-primary-500"></div>
@@ -202,15 +198,14 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
           </div>
         </div>
 
-        {/* Instructions Section */}
-        <div className="mb-12 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-primary-700 mb-6 flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mb-12 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-primary-700 mb-4 sm:mb-6 flex items-center">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
             Instructions
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {recipe.instructions.split('\n').map((instruction, index) => (
               <div key={index} className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm">
                 <span className="flex-shrink-0 w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center font-bold">
@@ -222,12 +217,10 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
           </div>
         </div>
 
-        {/* Comments Section */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-primary-700 mb-6">Comments & Ratings</h2>
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-primary-700 mb-4 sm:mb-6">Comments & Ratings</h2>
           
-          {/* Comment Form */}
-          <div ref={commentFormRef} className="mb-8 bg-white rounded-lg p-4 shadow-sm">
+          <div ref={commentFormRef} className="mb-6 sm:mb-8 bg-white rounded-lg p-4 shadow-sm">
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
@@ -276,8 +269,7 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
             </div>
           </div>
 
-          {/* Comments List */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {comments.map((comment, index) => (
               <div 
                 key={comment._id || index} 
@@ -299,7 +291,6 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
             ))}
           </div>
 
-          {/* Add Pagination Controls here */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center space-x-4 mt-6">
               <button
