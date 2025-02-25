@@ -128,12 +128,12 @@ export default function ManageCategories() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-700">Manage Categories</h1>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8 gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-700">Manage Categories</h1>
           <Link
             href="/"
-            className="px-6 py-2 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors"
+            className="w-full sm:w-auto px-6 py-2 bg-primary-100 text-primary-700 rounded-full hover:bg-primary-200 transition-colors text-center"
           >
             Back to Home
           </Link>
@@ -156,9 +156,9 @@ export default function ManageCategories() {
         )}
 
         {/* Add New Category Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-4 sm:mb-8">
           <h2 className="text-xl font-semibold text-primary-700 mb-4">Add New Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-1">
                 Category Name
@@ -186,14 +186,14 @@ export default function ManageCategories() {
           </div>
           <button
             type="submit"
-            className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
+            className="mt-4 px-6 py-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors w-full sm:w-auto"
           >
             Add Category
           </button>
         </form>
 
         {/* Categories List */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
           <h2 className="text-xl font-semibold text-primary-700 mb-4">Existing Categories</h2>
           {isLoading ? (
             <div className="flex justify-center py-8">
@@ -202,7 +202,7 @@ export default function ManageCategories() {
           ) : categories.length === 0 ? (
             <p className="text-gray-500 text-center py-4">No categories found</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {categories.map((category) => (
                 <CategoryCard
                   key={category._id}
