@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-// Add this interface at the top of your ApiTester component file
 interface ApiTesterProps {
   selectedEndpoint: {
     path: string;
@@ -24,10 +23,8 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
       setEndpoint(selectedEndpoint.path);
       setMethod(selectedEndpoint.method);
       setRequestBody(selectedEndpoint.body || '');
-      // Reset response when endpoint changes
       setResponse('');
       
-      // Scroll to ApiTester component
       const apiTester = document.getElementById('api-tester');
       if (apiTester) {
         apiTester.scrollIntoView({ behavior: 'smooth' });
@@ -35,7 +32,6 @@ export default function ApiTester({ selectedEndpoint, onEndpointSelect }: ApiTes
     }
   }, [selectedEndpoint]);
 
-  // Reset response when manually changing endpoint or method
   const handleEndpointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndpoint(e.target.value);
     setResponse('');

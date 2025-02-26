@@ -13,14 +13,12 @@ export default function QuickActions({
 }) {
   const [activeMethod, setActiveMethod] = useState<string>('ALL');
 
-  // Wenn ein neuer Endpoint ausgewählt wird, setze die aktive Methode
   useEffect(() => {
     if (selectedEndpoint) {
       setActiveMethod(selectedEndpoint.method);
     }
   }, [selectedEndpoint]);
 
-  // Gruppiere Endpoints nach Methode
   const groupedEndpoints = endpoints.reduce((acc, endpoint) => {
     if (!acc[endpoint.method]) {
       acc[endpoint.method] = [];
