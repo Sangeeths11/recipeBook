@@ -17,7 +17,6 @@ export default function ApiDocs() {
 
   const handleEndpointSelect = (path: string, method: string, body?: string) => {
     setSelectedEndpoint({ path, method, body });
-    // Scroll to ApiTester component
     const apiTester = document.getElementById('api-tester');
     if (apiTester) {
       apiTester.scrollIntoView({ behavior: 'smooth' });

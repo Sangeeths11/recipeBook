@@ -29,14 +29,12 @@ export default function CreateRecipe() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch ingredients
         const ingredientsResponse = await fetch('/api/ingredients');
         const ingredientsData = await ingredientsResponse.json();
         if (ingredientsData.success) {
           setIngredients(ingredientsData.data);
         }
 
-        // Fetch categories
         const categoriesResponse = await fetch('/api/categories');
         const categoriesData = await categoriesResponse.json();
         if (categoriesData.success) {
@@ -67,7 +65,6 @@ export default function CreateRecipe() {
   };
 
   const removeIngredient = (index: number) => {
-    // Only allow removal if there's more than one ingredient
     if (formData.ingredients.length > 1) {
       const newIngredients = formData.ingredients.filter((_, i) => i !== index);
       setFormData({ ...formData, ingredients: newIngredients });
@@ -98,7 +95,6 @@ export default function CreateRecipe() {
       const recipeData = await recipeResponse.json();
       if (!recipeResponse.ok) throw new Error('Failed to create recipe');
 
-      // If there's an image, upload it
       if (formData.image) {
         const imageFormData = new FormData();
         imageFormData.append('image', formData.image);

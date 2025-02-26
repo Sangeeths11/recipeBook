@@ -20,7 +20,6 @@ export default function Home() {
   });
 
   useEffect(() => {
-    // Fetch categories
     const fetchCategories = async () => {
       try {
         const response = await fetch('/api/categories');
@@ -39,7 +38,6 @@ export default function Home() {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        // Build query parameters
         const params = new URLSearchParams();
         if (searchTerm) params.append('search', searchTerm);
         if (filters.difficulty) params.append('difficulty', filters.difficulty);
@@ -57,7 +55,6 @@ export default function Home() {
         setIsLoading(false);
       }
     };
-    // Debounce the fetch to avoid too many requests
     const timeoutId = setTimeout(fetchRecipes, 300);
     return () => clearTimeout(timeoutId);
   }, [searchTerm, filters]);
@@ -78,13 +75,11 @@ export default function Home() {
 
       if (!response.ok) throw new Error('Failed to delete recipe');
 
-      // Build query parameters
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (filters.difficulty) params.append('difficulty', filters.difficulty);
       if (filters.category) params.append('category', filters.category);
 
-      // Fetch updated recipes
       const recipesResponse = await fetch(`/api/recipes?${params.toString()}`);
       const data = await recipesResponse.json();
       if (data.success) {

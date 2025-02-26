@@ -26,14 +26,13 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
     categories: [] as string[],
     ingredients: [{ ingredient: '', amount: 0 }] as RecipeIngredient[],
     image: null as File | null,
-    existingImage: null as any // Für das bestehende Bild
+    existingImage: null as any
   });
   const [recipe, setRecipe] = useState<Recipe | null>(null);
 
   useEffect(() => {
     const fetchRecipeAndIngredients = async () => {
       try {
-        // Fetch recipe data
         const recipeResponse = await fetch(`/api/recipes/${id}`);
         const recipeData = await recipeResponse.json();
         
@@ -55,18 +54,16 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
               amount: ing.amount
             })),
             image: null,
-            existingImage: recipe.image // Speichere das bestehende Bild
+            existingImage: recipe.image
           });
         }
 
-        // Fetch ingredients
         const ingredientsResponse = await fetch('/api/ingredients');
         const ingredientsData = await ingredientsResponse.json();
         if (ingredientsData.success) {
           setIngredients(ingredientsData.data);
         }
 
-        // Fetch categories
         const categoriesResponse = await fetch('/api/categories');
         const categoriesData = await categoriesResponse.json();
         if (categoriesData.success) {
@@ -125,7 +122,6 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
 
       if (!response.ok) throw new Error('Failed to update recipe');
 
-      // If there's a new image, upload it
       if (formData.image) {
         const imageFormData = new FormData();
         imageFormData.append('image', formData.image);
@@ -153,7 +149,6 @@ export default function EditRecipe({ params }: { params: Promise<{ id: string }>
     if (file) {
       setFormData({ ...formData, image: file });
     }
-    // Don't reset the input value here anymore
   };
 
   return (

@@ -64,15 +64,12 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
 
       if (!response.ok) throw new Error('Failed to add comment');
 
-      // Reset form
       setComment('');
       setAuthorName('');
       setRating(5);
 
-      // Setze die Seite zurück und lade die Kommentare neu
       setCurrentPage(1);
       
-      // Lade die Kommentare sofort neu
       const commentsResponse = await fetch(`/api/recipes/${id}/comments?page=1`);
       const commentsData = await commentsResponse.json();
       if (commentsData.success) {
@@ -80,7 +77,6 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
         setTotalPages(commentsData.pagination.pages);
       }
       
-      // Scroll to comment form
       commentFormRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('Error adding comment:', error);
