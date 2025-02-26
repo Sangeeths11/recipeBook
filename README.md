@@ -40,8 +40,8 @@ A modern, full-stack recipe management application with a RESTful API, built wit
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/recipe-book-api.git
-cd recipe-book-api
+git clone https://github.com/yourusername/recipeBook.git
+cd recipeBook
 ```
 
 2. Install dependencies:
@@ -98,7 +98,7 @@ docker run -p 3005:3005 recipe-book
 
 ## 📚 API Documentation
 
-Interactive API documentation is available at `/api-docs` when running the application. The documentation includes:
+Interactive API documentation, built by me, is available at [http://localhost:3005/api-docs](http://localhost:3005/api-docs) when the application is running. The documentation includes:
 
 - Real-time API testing interface
 - Request/response examples
@@ -125,6 +125,10 @@ Interactive API documentation is available at `/api-docs` when running the appli
   - Pagination support
 
 ## 🏗️ Architecture
+
+### Architecture Diagram
+
+![Architecture Diagram](./public/architecture-diagram.png)
 
 ### Project Structure
 
@@ -177,9 +181,6 @@ recipe-book/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -191,6 +192,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by [@Sangeeths11](https://github.com/Sangeeths11)
 
 </div>
