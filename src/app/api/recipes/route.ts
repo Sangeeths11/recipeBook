@@ -9,13 +9,11 @@ export async function GET(request: Request) {
   try {
     await connectDB();
 
-    // Get search params from URL
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
     const difficulty = searchParams.get('difficulty');
     const category = searchParams.get('category');
 
-    // Build query
     const query: any = {};
 
     if (search) {
@@ -30,12 +28,10 @@ export async function GET(request: Request) {
     }
 
     if (category) {
-      // Ensure Category model is registered
       if (!mongoose.models.Category) {
         mongoose.model('Category', Category.schema);
       }
       
-      // Find category by name
       const categoryDoc = await mongoose.models.Category.findOne({ 
         name: { $regex: `^${category}$`, $options: 'i' } 
       });
@@ -45,7 +41,6 @@ export async function GET(request: Request) {
       }
     }
 
-    // Ensure models are registered
     if (!mongoose.models.Ingredient) {
       mongoose.model('Ingredient', Ingredient.schema);
     }
@@ -85,7 +80,6 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Error creating recipe:', error);
     
-    // Mongoose Validation Error
     if (error.name === 'ValidationError') {
       const validationErrors: string[] = [];
       
@@ -119,7 +113,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Cast Error (ungültige ObjectId)
     if (error.name === 'CastError') {
       return NextResponse.json(
         { 

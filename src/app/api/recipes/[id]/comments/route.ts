@@ -4,7 +4,6 @@ import Comment from '@/models/Comment';
 import Recipe from '@/models/Recipe';
 import mongoose from 'mongoose';
 
-// GET comments for a specific recipe
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -52,7 +51,6 @@ export async function GET(
   }
 }
 
-// POST a new comment
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

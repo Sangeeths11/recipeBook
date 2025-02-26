@@ -4,7 +4,6 @@ import Ingredient from '@/models/Ingredient';
 import Recipe from '@/models/Recipe';
 import mongoose from 'mongoose';
 
-// Get the valid units from the Mongoose schema
 const validUnits = (Ingredient.schema.path('defaultUnit') as any).enumValues;
 
 export async function GET(
@@ -40,7 +39,6 @@ export async function PUT(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { success: false, error: 'Invalid ID format' },
@@ -52,7 +50,6 @@ export async function PUT(
     await connectDB();
     const data = await request.json();
     
-    // First get the current ingredient
     const currentIngredient = await Ingredient.findById(id);
     if (!currentIngredient) {
       return NextResponse.json(
@@ -61,10 +58,9 @@ export async function PUT(
       );
     }
 
-    // Only check for name conflicts if the name is being changed
     if (data.name && data.name !== currentIngredient.name) {
       const existingIngredient = await Ingredient.findOne({
-        _id: { $ne: id }, // Exclude current ingredient
+        _id: { $ne: id },
         name: { $regex: `^${data.name}$`, $options: 'i' }
       });
 

@@ -9,7 +9,6 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { 
@@ -23,7 +22,6 @@ export async function DELETE(
   try {
     await connectDB();
     
-    // Check if recipe exists
     const recipe = await Recipe.findById(id);
     if (!recipe) {
       return NextResponse.json(
@@ -32,7 +30,6 @@ export async function DELETE(
       );
     }
 
-    // Delete recipe
     await Recipe.findByIdAndDelete(id);
     
     return NextResponse.json({ 
@@ -54,7 +51,6 @@ export async function GET(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { 

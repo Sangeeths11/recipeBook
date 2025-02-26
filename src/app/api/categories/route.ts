@@ -27,7 +27,6 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     
-    // Validate JSON format
     let data;
     try {
       data = await request.json();
@@ -38,7 +37,6 @@ export async function POST(request: Request) {
       );
     }
     
-    // Validate required fields
     if (!data.name || !data.description) {
       return NextResponse.json(
         { success: false, error: 'Name and description are required' },
@@ -46,7 +44,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if category already exists
     const existingCategory = await Category.findOne({ 
       name: { $regex: `^${data.name}$`, $options: 'i' }
     });

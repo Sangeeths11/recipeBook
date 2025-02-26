@@ -10,7 +10,6 @@ export async function GET(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { 
@@ -48,7 +47,6 @@ export async function PUT(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { 
@@ -63,7 +61,6 @@ export async function PUT(
     await connectDB();
     const data = await request.json();
 
-    // First get the current category
     const currentCategory = await Category.findById(id);
     if (!currentCategory) {
       return NextResponse.json(
@@ -72,7 +69,6 @@ export async function PUT(
       );
     }
 
-    // Only check for name conflicts if the name is being changed
     if (data.name && data.name !== currentCategory.name) {
       const existingCategory = await Category.findOne({
         _id: { $ne: id },
@@ -109,7 +105,6 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
-  // Validate MongoDB ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json(
       { 
@@ -123,7 +118,6 @@ export async function DELETE(
   try {
     await connectDB();
     
-    // Check if category is used in any recipes
     const recipesUsingCategory = await Recipe.findOne({ categories: id });
     if (recipesUsingCategory) {
       return NextResponse.json(

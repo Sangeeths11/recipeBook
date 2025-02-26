@@ -21,7 +21,6 @@ export async function POST(request: Request) {
     await connectDB();
     const data = await request.json();
     
-    // Check if ingredient with same name already exists
     const existingIngredient = await Ingredient.findOne({
       name: { $regex: `^${data.name}$`, $options: 'i' }
     });
