@@ -26,20 +26,7 @@ export const endpoints: Endpoint[] = [
     ],
     instructions: "Updated step by step instructions"
   }, null, 2) },
-  { method: 'DELETE', path: '/recipes/:id', description: 'Delete a recipe' },
-  // {
-  //   method: 'POST',
-  //   path: '/recipes/upload',
-  //   description: 'Upload recipe image',
-  //   exampleBody: JSON.stringify({
-  //     note: "This endpoint requires multipart/form-data",
-  //     formData: {
-  //       image: "File (image/*)",
-  //       recipeId: "string (recipe ID)"
-  //     }
-  //   }, null, 2)
-  // },
-  
+  { method: 'DELETE', path: '/recipes/:id', description: 'Delete a recipe' },  
   // Category endpoints
   { method: 'GET', path: '/categories', description: 'Get all categories' },
   { method: 'GET', path: '/categories/:id', description: 'Get a specific category' },
@@ -58,12 +45,12 @@ export const endpoints: Endpoint[] = [
   { method: 'GET', path: '/ingredients/:id', description: 'Get a specific ingredient' },
   { method: 'POST', path: '/ingredients', description: 'Create a new ingredient', exampleBody: JSON.stringify({
     name: "New Ingredient",
-    defaultUnit: "g", // One of: g, kg, ml, l, piece, tbsp, tsp, cup
+    defaultUnit: "g",
     description: "Optional ingredient description"
   }, null, 2) },
   { method: 'PUT', path: '/ingredients/:id', description: 'Update an ingredient', exampleBody: JSON.stringify({
     name: "Updated Ingredient",
-    defaultUnit: "g", // One of: g, kg, ml, l, piece, tbsp, tsp, cup
+    defaultUnit: "g",
     description: "Updated description"
   }, null, 2) },
   { method: 'DELETE', path: '/ingredients/:id', description: 'Delete an ingredient' },

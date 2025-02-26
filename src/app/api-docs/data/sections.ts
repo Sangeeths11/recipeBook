@@ -117,31 +117,6 @@ export const sections: { title: string; endpoints: Endpoint[]; }[] = [
             success: true
           }
         },
-        // {
-        //   method: "POST",
-        //   path: "/recipes/upload",
-        //   description: "Upload an image for a recipe",
-        //   params: [
-        //     { name: "recipeId", description: "ID of the recipe (required, must be a valid MongoDB ObjectId)" }
-        //   ],
-        //   requestBody: {
-        //     type: "multipart/form-data",
-        //     fields: {
-        //       image: "File (image/*) - Required",
-        //       recipeId: "string (valid MongoDB ObjectId) - Required"
-        //     }
-        //   },
-        //   response: {
-        //     success: true,
-        //     data: {
-        //       _id: "string",
-        //       image: {
-        //         data: "Buffer",
-        //         contentType: "string"
-        //       }
-        //     }
-        //   },
-        // }
       ]
     },
     {
