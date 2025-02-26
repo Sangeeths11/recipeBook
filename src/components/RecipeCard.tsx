@@ -13,21 +13,21 @@ export default function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    e.stopPropagation(); // Stop event bubbling
+    e.preventDefault();
+    e.stopPropagation();
     setShowConfirm(true);
   };
 
   const handleConfirmDelete = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    e.stopPropagation(); // Stop event bubbling
+    e.preventDefault();
+    e.stopPropagation();
     setIsDeleting(true);
     await onDelete(recipe._id);
   };
 
   const handleCancelDelete = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    e.stopPropagation(); // Stop event bubbling
+    e.preventDefault();
+    e.stopPropagation();
     setShowConfirm(false);
   };
 
