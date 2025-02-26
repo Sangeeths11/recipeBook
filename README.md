@@ -186,7 +186,6 @@ recipe-book/
 
 - Next.js team for the amazing framework
 - MongoDB team for the robust database
-- All contributors who have helped shape this project
 
 ---
 
