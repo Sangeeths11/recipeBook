@@ -128,7 +128,7 @@ Interactive API documentation, built by me, is available at [http://localhost:30
 
 ### Architecture Diagram
 
-![Architecture Diagram](![image](https://github.com/user-attachments/assets/40739ef6-5559-4bab-84fb-19d5d56c5b34))
+![Architecture Diagram](./gitimages/architecture-diagram.png)
 
 ### Project Structure
 
