@@ -16,7 +16,8 @@ const RecipeSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Please provide a title'],
-    maxlength: [100, 'Title cannot be more than 100 characters']
+    maxlength: [100, 'Title cannot be more than 100 characters'],
+    index: true
   },
   description: {
     type: String,
@@ -24,7 +25,8 @@ const RecipeSchema = new mongoose.Schema({
   },
   categories: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
+    ref: 'Category',
+    index: true
   }],
   ingredients: [RecipeIngredientSchema],
   instructions: {
@@ -38,15 +40,21 @@ const RecipeSchema = new mongoose.Schema({
   preparationTime: {
     type: Number,
     min: 1,
-    required: true
+    required: true,
+    index: true
   },
   difficulty: {
     type: String,
     enum: ['easy', 'medium', 'hard'],
-    required: true
+    required: true,
+    index: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  autoIndex: true
 });
 
-export default mongoose.models.Recipe || mongoose.model('Recipe', RecipeSchema); 
+RecipeSchema.index({ difficulty: 1, preparationTime: 1 });
+RecipeSchema.index({ title: 'text', description: 'text' });
+
+export default mongoose.models.Recipe || mongoose.model('Recipe', RecipeSchema);
