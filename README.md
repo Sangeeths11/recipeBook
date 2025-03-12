@@ -98,7 +98,7 @@ docker run -p 3005:3005 recipe-book
 
 ## 📚 API Documentation
 
-Interactive API documentation, built by me, is available at [http://localhost:3005/api-docs](http://localhost:3005/api-docs) when the application is running. The documentation includes:
+I build an own Interactive API documentation, it is available at [http://localhost:3005/api-docs](http://localhost:3005/api-docs) when the application is running. The documentation includes:
 
 - Real-time API testing interface
 - Request/response examples
