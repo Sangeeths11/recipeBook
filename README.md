@@ -85,7 +85,7 @@ This will:
 1. Start MongoDB:
 
 ```bash
-docker-compose up mongo
+docker-compose up mongodb
 ```
 
 2. Build and run the application:
