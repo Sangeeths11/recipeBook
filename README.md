@@ -134,6 +134,11 @@ I build an own Interactive API documentation, it is available at [http://localho
 
 ![Architecture Diagram](./gitimages/architecture-diagram.png)
 
+### ERM Diagram
+
+![ERM Diagram](./gitimages/architecture-diagram.png)
+
+
 ### Project Structure
 
 ```bash
