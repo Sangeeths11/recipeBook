@@ -134,9 +134,9 @@ I build an own Interactive API documentation, it is available at [http://localho
 
 ![Architecture Diagram](./gitimages/architecture-diagram.png)
 
-### ERM Diagram
+### ERD Diagram
 
-![ERM Diagram](./gitimages/architecture-diagram.png)
+![ERD Diagram](./gitimages/ERD_diagram.png)
 
 
 ### Project Structure
